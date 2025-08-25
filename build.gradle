@@ -1,0 +1,53 @@
+plugins {
+    id 'java'
+    id 'war'
+}
+
+group = 'mil.teng254.legacy'
+version = '1.0.0'
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // Spring Framework
+    implementation 'org.springframework:spring-web:5.2.8.RELEASE'
+    implementation 'org.springframework:spring-context:5.2.8.RELEASE'
+
+    // Jersey JAX-RS implementation
+    implementation 'com.sun.jersey:jersey-bundle:1.19.4'
+    implementation 'com.sun.jersey:jersey-json:1.19.4'
+    implementation 'com.sun.jersey.contribs:jersey-spring:1.19.4'
+
+    // Thymeleaf
+    implementation 'org.thymeleaf:thymeleaf:3.0.11.RELEASE'
+    implementation 'org.thymeleaf:thymeleaf-spring5:3.0.11.RELEASE'
+
+    // Google Guava
+    implementation 'com.google.guava:guava:20.0'
+
+    // Lombok
+    compileOnly 'org.projectlombok:lombok:1.18.20'
+    annotationProcessor 'org.projectlombok:lombok:1.18.20'
+
+    // Logging
+    implementation 'log4j:log4j:1.2.14'
+
+    // Testing
+    testImplementation 'junit:junit:4.12'
+    testImplementation 'org.springframework:spring-test:5.2.8.RELEASE'
+
+    // Servlet API
+    providedCompile 'javax.servlet:javax.servlet-api:3.1.0'
+    providedCompile 'javax.xml.bind:jaxb-api:2.3.1'
+    providedCompile 'com.sun.xml.bind:jaxb-core:2.3.0.1'
+    providedCompile 'com.sun.xml.bind:jaxb-impl:2.3.1'
+}
+
+war {
+    archiveFileName = 'ROOT.war'
+}
