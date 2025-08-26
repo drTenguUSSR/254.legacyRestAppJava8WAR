@@ -1,9 +1,10 @@
 package mil.teng254.legacy.dto;
 
 import javax.xml.bind.annotation.XmlRootElement;
+import java.io.Serializable;
 
 @XmlRootElement
-public class RequestDto {
+public class RequestDto implements Serializable {
     private Long key;
     private String stamp;
 
@@ -14,5 +15,3 @@ public class RequestDto {
     public String getStamp() { return stamp; }
     public void setStamp(String stamp) { this.stamp = stamp; }
 }
-
-

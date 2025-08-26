@@ -1,9 +1,10 @@
 package mil.teng254.legacy.dto;
 
 import javax.xml.bind.annotation.XmlRootElement;
+import java.io.Serializable;
 
 @XmlRootElement
-public class ResponseDto {
+public class ResponseDto implements Serializable {
     private Long res;
     private String stamp;
     private String tz;

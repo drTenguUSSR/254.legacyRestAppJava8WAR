@@ -7,6 +7,13 @@ RUN wget https://services.gradle.org/distributions/gradle-6.8.2-bin.zip
 RUN unzip gradle-6.8.2-bin.zip -d /opt
 RUN ln -s /opt/gradle-6.8.2/bin/gradle /usr/bin/gradle
 
+# Установка UTF-8 локали
+RUN apt-get install -y locales
+RUN locale-gen en_US.UTF-8
+ENV LANG=en_US.UTF-8
+ENV LANGUAGE=en_US:en
+ENV LC_ALL=en_US.UTF-8
+
 # Копирование исходного кода
 WORKDIR /app
 COPY . .
@@ -16,6 +23,13 @@ RUN gradle war
 
 # Этап выполнения
 FROM tomcat:8.5.63-jre8
+
+# Установка UTF-8 локали
+RUN apt-get update && apt-get install -y locales
+RUN locale-gen en_US.UTF-8
+ENV LANG=en_US.UTF-8
+ENV LANGUAGE=en_US:en
+ENV LC_ALL=en_US.UTF-8
 
 # Удаляем стандартные приложения Tomcat для безопасности
 RUN rm -rf /usr/local/tomcat/webapps/*

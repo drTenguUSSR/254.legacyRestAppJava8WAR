@@ -4,7 +4,7 @@
 ````bash
 docker build -t legacy-java-app .
 ````
-2. Запуск контейнера с стандартным портом:
+2. Запуск контейнера со стандартным портом:
 ````bash
 docker run -d -p 8081:8081 -p 8082:8082 --name legacy-app legacy-java-app
 ````
