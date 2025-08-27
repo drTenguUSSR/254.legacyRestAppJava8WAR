@@ -15,11 +15,11 @@
     </GlobalNamingResources>
 
     <Service name="Catalina">
-        <Connector port="8081" protocol="HTTP/1.1"
+        <Connector port="${MAIN_PORT}" protocol="HTTP/1.1"
                    connectionTimeout="20000"
                    redirectPort="8443" />
 
-        <Connector port="${env.SPECIAL_PORT}" protocol="HTTP/1.1"
+        <Connector port="${SPECIAL_PORT}" protocol="HTTP/1.1"
                    connectionTimeout="20000"
                    redirectPort="8443" />
 
