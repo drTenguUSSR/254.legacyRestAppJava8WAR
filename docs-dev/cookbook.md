@@ -6,18 +6,19 @@
 gradlew wrapper --gradle-version 6.8.2
 ````
 
-## запуск в tomcat
+## Запуск в tomcat
 
 - новый файл go-start.cmd
 ````bat
-set MAIN_PORT=8081
-set SPECIAL_PORT=8082
-echo ports main:%MAIN_PORT% spec:%SPECIAL_PORT%
-set JAVA_OPTS=-Dorg.apache.tomcat.util.digester.PROPERTY_SOURCE=org.apache.tomcat.util.digester.EnvironmentPropertySource
-del logs\*.log
-del logs\*.txt
-call x-set-1.8.cmd
-bin\startup.bat
+set JAVA_OPTS=%JAVA_OPTS% -Xms1024m -Xmx2096m -Dfile.encoding=utf-8
+set JAVA_OPTS=%JAVA_OPTS% -XX:+UnlockCommercialFeatures -XX:+FlightRecorder
+@rem  -Xdebug
+
+set JPDA_TRANSPORT=dt_socket
+set JPDA_ADDRESS=localhost:5006
+set JPDA_SUSPEND=n
+
+call bin\catalina.bat jpda start
 ````
 альтернатива - указать org.apache.tomcat.util.digester.PROPERTY_SOURCE в
 conf\catalina.properties
@@ -30,6 +31,7 @@ bin\shutdown.bat
 - правка существующего файла
 conf/server.xml
 ````xml
+<Server>
         <Connector port="${MAIN_PORT}" protocol="HTTP/1.1"
                    connectionTimeout="20000"
                    redirectPort="8443" />
@@ -37,6 +39,7 @@ conf/server.xml
         <Connector port="${SPECIAL_PORT}" protocol="HTTP/1.1"
                    connectionTimeout="20000"
                    redirectPort="8443" />
+</Server>
 ````
 
 - ошибка - ```Caused by: java.lang.ClassNotFoundException: javax.xml.bind.JAXBContext```
@@ -56,3 +59,14 @@ dependencies {
     implementation 'javax.activation:activation:1.1.1'
 }
 ````
+
+## Запуск отладки в Intellij Idea
+
+- run/debug configurations
+
+      Debugger mode: attach to remote JVM
+      Transport: Socket
+      Host: localhost
+      Port: 5006
+      JDK 5-8
+      Command line: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5006
