@@ -7,8 +7,19 @@
         </layout>
     </appender>
 
+    <appender name="APP_LOG" class="org.apache.log4j.RollingFileAppender">
+        <param name="File" value="${catalina.base}/logs/application.log"/>
+        <param name="Append" value="true"/>
+        <param name="MaxFileSize" value="10MB"/> <!-- Maximum size of the log file before rolling -->
+        <param name="MaxBackupIndex" value="5"/> <!-- Number of backup files to keep -->
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L - %m%n"/>
+        </layout>
+    </appender>
+
     <root>
         <priority value="DEBUG" />
         <appender-ref ref="CONSOLE" />
+        <appender-ref ref="APP_LOG" />
     </root>
 </log4j:configuration>

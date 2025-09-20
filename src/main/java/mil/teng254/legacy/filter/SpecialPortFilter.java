@@ -2,23 +2,31 @@ package mil.teng254.legacy.filter;
 
 import com.sun.jersey.spi.container.ContainerRequest;
 import com.sun.jersey.spi.container.ContainerRequestFilter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 @Provider
 @Component
 public class SpecialPortFilter implements ContainerRequestFilter {
-
+    Logger log = LoggerFactory.getLogger(SpecialPortFilter.class);
     private int specialPort;
     private Map<String, Class<?>> specialControllers = new HashMap<>();
+    @Context
+    private HttpServletRequest httpServletRequest;
 
     public SpecialPortFilter() {
+        log.debug(".ctor called. this={}", System.identityHashCode(this));
         String portStr = System.getenv("SPECIAL_PORT");
         if (portStr == null) {
             throw new RuntimeException("SPECIAL_PORT environment variable is required");
@@ -33,12 +41,13 @@ public class SpecialPortFilter implements ContainerRequestFilter {
         }
 
         // Предварительная регистрация путей специальных контроллеров
-        specialControllers.put("/api/special/", mil.teng254.legacy.controller.SpecialController.class);
+        specialControllers.put("special/", mil.teng254.legacy.controller.SpecialController.class);
     }
 
     @Override
     public ContainerRequest filter(ContainerRequest request) {
         String path = request.getPath();
+        log.debug("filter for [{}]", path);
         int requestPort = request.getBaseUri().getPort();
 
         // Проверяем, относится ли запрос к специальному контроллеру
@@ -53,13 +62,22 @@ public class SpecialPortFilter implements ContainerRequestFilter {
             }
         }
 
+        //TODO: customize error on WebApplicationException
         if (isSpecialController && controllerClass != null) {
             // Проверяем наличие аннотации @SpecialPort на классе контроллера
             SpecialPort annotation = AnnotationUtils.findAnnotation(controllerClass, SpecialPort.class);
             if (annotation != null) {
+                if (httpServletRequest == null) {
+                    String uuid = UUID.randomUUID().toString();
+                    log.error("special-controller. {}. httpServletRequest is empty", uuid);
+                    throw new WebApplicationException(Response.Status.FORBIDDEN);
+                }
+                String remoteIpAddress = httpServletRequest.getRemoteAddr();
                 if (specialPort == -1) {
+                    log.error("special-controller. only-port(-1). from={}", remoteIpAddress);
                     throw new WebApplicationException(Response.Status.FORBIDDEN);
                 } else if (requestPort != specialPort) {
+                    log.error("special-controller. only-port({}). from={}", specialPort, remoteIpAddress);
                     throw new WebApplicationException(Response.Status.FORBIDDEN);
                 }
             }
