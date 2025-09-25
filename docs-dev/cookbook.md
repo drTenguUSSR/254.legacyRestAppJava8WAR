@@ -2,6 +2,7 @@
 
 ## Базовый промпт для генерации кода
 
+Есть приложение:
 - используется Oracle Java 1.8 x64, Spring 5.2.8.Release, Jersey 1.19.4, Gradle 6.8.2 + groovy, JUnit 4.12.
 - исполльзуется Lombok 1.18.20, Google Guava 20.0, Log4j 1.2.14 + xml конфигурация, фасад slf4j
 - SpringBoot не используется
