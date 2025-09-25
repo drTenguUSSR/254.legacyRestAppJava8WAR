@@ -5,9 +5,13 @@ import mil.teng254.legacy.dto.ResponseDto;
 import mil.teng254.legacy.filter.SpecialPort;
 import org.springframework.stereotype.Component;
 
-import javax.ws.rs.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.xml.bind.JAXBElement;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -21,9 +25,26 @@ public class SpecialController {
     @Path("/mark-path")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response markPath(RequestDto request) {
+    public Response markPath(JAXBElement<RequestDto> wrequest) {
         ResponseDto response = new ResponseDto();
 
+        StringBuilder report = new StringBuilder();
+
+        RequestDto request = wrequest.getValue();
+        if (request.getOptionalField() != null) {
+            report.append("OptionalField=[").append(request.getOptionalField()).append("]");
+        } else {
+            report.append("OptionalField=!null");
+        }
+        if (request.getChoiceField() != null) {
+            String xtype = request.getChoiceField().getClass().getSimpleName();
+            Object xval = request.getChoiceField();
+            report.append(";ChoiceField=[").append(xtype).append(":").append(xval).append("]");
+        } else {
+            report.append(";ChoiceField=!null");
+        }
+
+        response.setReport(report.toString());
         // Инкрементируем key
         response.setRes(request.getKey() + 1);
 

@@ -27,6 +27,9 @@ dependencies {
     implementation 'com.sun.jersey:jersey-bundle:1.19.4'
     implementation 'com.sun.jersey:jersey-json:1.19.4'
     implementation 'com.sun.jersey.contribs:jersey-spring:1.19.4'
+    
+    //для доступа к com.sun.jersey.json.impl.provider.entity.JSONJAXBElementProvider
+    //implementation 'com.sun.jersey:jersey-json:1.19.4'
 
     // Thymeleaf
     implementation 'org.thymeleaf:thymeleaf:3.0.11.RELEASE'
