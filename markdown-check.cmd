@@ -1,0 +1,1 @@
+markdownlint -c markdown-lint.json --disable MD033 -- *.md
