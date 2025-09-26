@@ -32,8 +32,8 @@ dependencies {
     //implementation 'com.sun.jersey:jersey-json:1.19.4'
 
     // Thymeleaf
-    implementation 'org.thymeleaf:thymeleaf:3.0.11.RELEASE'
-    implementation 'org.thymeleaf:thymeleaf-spring5:3.0.11.RELEASE'
+//    implementation 'org.thymeleaf:thymeleaf:3.0.11.RELEASE'
+//    implementation 'org.thymeleaf:thymeleaf-spring5:3.0.11.RELEASE'
 
     // Google Guava
     implementation 'com.google.guava:guava:20.0'
@@ -49,6 +49,10 @@ dependencies {
     // Testing
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.springframework:spring-test:5.2.8.RELEASE'
+    //testImplementation 'com.sun.jersey:jersey-test-framework-grizzly2:1.19.4'
+    testImplementation 'com.sun.jersey.jersey-test-framework:jersey-test-framework-grizzly:1.19.4'
+    testImplementation 'com.sun.jersey:jersey-client:1.19.4'
+    testImplementation 'javax.xml.bind:jaxb-api:2.3.1'
 
     // Servlet API
     providedCompile 'javax.servlet:javax.servlet-api:3.1.0'

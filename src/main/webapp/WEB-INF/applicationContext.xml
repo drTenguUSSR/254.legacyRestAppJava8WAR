@@ -9,13 +9,13 @@
 
     <context:component-scan base-package="mil.teng254.legacy"/>
 
-    <bean id="templateEngine" class="org.thymeleaf.spring5.SpringTemplateEngine">
-        <property name="templateResolver">
-            <bean class="org.thymeleaf.templateresolver.ServletContextTemplateResolver">
-                <property name="prefix" value="/WEB-INF/templates/" />
-                <property name="suffix" value=".html" />
-                <property name="templateMode" value="HTML" />
-            </bean>
-        </property>
-    </bean>
+<!--    <bean id="templateEngine" class="org.thymeleaf.spring5.SpringTemplateEngine">-->
+<!--        <property name="templateResolver">-->
+<!--            <bean class="org.thymeleaf.templateresolver.ServletContextTemplateResolver">-->
+<!--                <property name="prefix" value="/WEB-INF/templates/" />-->
+<!--                <property name="suffix" value=".html" />-->
+<!--                <property name="templateMode" value="HTML" />-->
+<!--            </bean>-->
+<!--        </property>-->
+<!--    </bean>-->
 </beans>
