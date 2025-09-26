@@ -46,17 +46,32 @@ dependencies {
     implementation 'org.slf4j:slf4j-api:1.7.36'
     implementation 'org.slf4j:slf4j-log4j12:1.7.36'
 
-    // Testing
-    testImplementation 'junit:junit:4.12'
-    testImplementation 'org.springframework:spring-test:5.2.8.RELEASE'
-
     // Servlet API
     providedCompile 'javax.servlet:javax.servlet-api:3.1.0'
     providedCompile 'javax.xml.bind:jaxb-api:2.3.1'
     providedCompile 'com.sun.xml.bind:jaxb-core:2.3.0.1'
     providedCompile 'com.sun.xml.bind:jaxb-impl:2.3.1'
+
+    // для тестирования
+    testImplementation 'junit:junit:4.12'
+    testImplementation 'org.springframework:spring-test:5.2.8.RELEASE'
+    testImplementation 'org.springframework:spring-webmvc:5.2.8.RELEASE'
+    testImplementation 'org.springframework:spring-web:5.2.8.RELEASE'
+    testImplementation 'com.sun.jersey.jersey-test-framework:jersey-test-framework-grizzly2:1.19.4'
+    testImplementation 'org.mockito:mockito-core:3.3.3'
+    testImplementation 'org.hamcrest:hamcrest-library:2.2'
 }
 
 war {
     archiveFileName = 'ROOT.war'
+}
+
+test {
+    useJUnit()
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+
+    // Передаем системные свойства если нужно
+    systemProperty 'spring.profiles.active', 'test'
 }
