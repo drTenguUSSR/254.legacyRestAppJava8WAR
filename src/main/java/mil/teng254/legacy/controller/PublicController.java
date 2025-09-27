@@ -1,8 +1,8 @@
 package mil.teng254.legacy.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import mil.teng254.legacy.dto.RequestDto;
 import mil.teng254.legacy.dto.ResponseDto;
-import mil.teng254.legacy.filter.SpecialPort;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.*;
@@ -14,7 +14,24 @@ import java.time.format.DateTimeFormatter;
 
 @Path("/public")
 @Component
+@Slf4j
 public class PublicController {
+
+    @GET
+    @Path("/time")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getLocalDtm() {
+        ZonedDateTime dtm = ZonedDateTime.now();
+        String dtmStamp = dtm.format(DateTimeFormatter.ISO_INSTANT);
+        ResponseDto resp = new ResponseDto();
+        resp.setStamp(dtmStamp);
+
+        ZoneId zoneId = ZoneId.of("UTC+3");
+        ZonedDateTime zdt = ZonedDateTime.of(2023, 11, 30, 23, 45, 59, 192345678, zoneId);
+        String zdtStamp = zdt.format(DateTimeFormatter.ISO_INSTANT);
+        resp.setReport(zdtStamp);
+        return Response.ok(resp).build();
+    }
 
     @POST
     @Path("/hello-path")
