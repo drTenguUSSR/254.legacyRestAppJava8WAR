@@ -9,13 +9,21 @@
 
     <context:component-scan base-package="mil.teng254.legacy"/>
 
-<!--    <bean id="templateEngine" class="org.thymeleaf.spring5.SpringTemplateEngine">-->
-<!--        <property name="templateResolver">-->
-<!--            <bean class="org.thymeleaf.templateresolver.ServletContextTemplateResolver">-->
-<!--                <property name="prefix" value="/WEB-INF/templates/" />-->
-<!--                <property name="suffix" value=".html" />-->
-<!--                <property name="templateMode" value="HTML" />-->
-<!--            </bean>-->
-<!--        </property>-->
-<!--    </bean>-->
+    <bean id="templateResolver" class="org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver">
+        <property name="prefix" value="classpath:/templates/" />
+        <property name="suffix" value=".html" />
+        <property name="templateMode" value="HTML" />
+        <property name="characterEncoding" value="UTF-8" />
+        <property name="cacheable" value="false" /> <!-- Для разработки и тестов -->
+    </bean>
+
+    <bean id="templateEngine" class="org.thymeleaf.spring5.SpringTemplateEngine">
+        <property name="templateResolver" ref="templateResolver" />
+        <property name="enableSpringELCompiler" value="true" />
+        <property name="additionalDialects">
+            <set>
+                <bean class="org.thymeleaf.extras.java8time.dialect.Java8TimeDialect"/>
+            </set>
+        </property>
+    </bean>
 </beans>

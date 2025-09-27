@@ -18,8 +18,10 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.ws.rs.core.MediaType;
-import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+//SPECIAL_PORT=1414
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "file:src/main/webapp/WEB-INF/applicationContext.xml")
 @Slf4j
@@ -97,6 +99,39 @@ public class PublicControllerIntegrationTest extends JerseyTest {
         PublicDtos.ResponseDto respData = response.getEntity(PublicDtos.ResponseDto.class);
         Assert.assertEquals(Long.valueOf(101), respData.getRes());
         Assert.assertEquals("2025-06-20T12:24:36Z", respData.getStamp());
-        Assert.assertEquals("+03:00",respData.getTz());
+        Assert.assertEquals("+03:00", respData.getTz());
+    }
+
+    @Test
+    public void testContext() {
+        // Проверяем, что бин "templateEngine" существует
+        Assert.assertNotNull(applicationContext.getBean("templateEngine"));
+        // Проверяем, что бин "currentTimeResource" существует и в него внедрен TemplateEngine
+        CurrentTimeResource resource = applicationContext.getBean(CurrentTimeResource.class);
+        Assert.assertNotNull(resource); // Убедитесь, что сам ресурс не null
+    }
+
+    @Test
+    public void testCurrentTimeEndpointReturnsValidHtml() {
+        // Создание запроса к эндпоинту времени
+        WebResource webResource = resource().path("dtm-now");
+
+        // Выполнение GET запроса
+        String htmlResponse = webResource
+                .accept(MediaType.TEXT_HTML)
+                .get(String.class);
+
+        // Проверка, что ответ является HTML и содержит ожидаемые элементы
+        Assert.assertNotNull("HTML response should not be null", htmlResponse);
+        Assert.assertTrue("Response should contain HTML title", htmlResponse.contains("<title>Current Time</title>"));
+        Assert.assertTrue("Response should contain the header", htmlResponse.contains("Текущая дата и время (UTC)"));
+
+        // Проверка формата даты (примерная проверка на соответствие шаблону ГГГГ-ММ-ДД)
+        // Это проверяет, что Thymeleaf обработал выражение с датой
+        String regExp = ".*via=\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3,9}Z.*";
+        Pattern pattern = Pattern.compile(regExp);
+        Matcher matcher = pattern.matcher(htmlResponse);
+        Assert.assertTrue("Response should contain a date string."
+                +"pat=[" + regExp + "] text=[\n"+htmlResponse+"\n]", matcher.find());
     }
 }

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Current Time</title>
+</head>
+<body>
+<h1>Текущая дата и время (UTC)</h1>
+<!-- Используем переменную 'currentUtcTime' -->
+<p th:text="${'via='+currentUtcTime}">Здесь будет отображено время</p>
+
+<!-- Или для более сложного форматирования с помощью временных утилит Thymeleaf -->
+<p th:text="${#temporals.format(#temporals.createNow(), 'yyyy-MM-dd HH:mm:ss Z')}">
+    Здесь будет отображено время
+</p>
+</body>
+</html>
