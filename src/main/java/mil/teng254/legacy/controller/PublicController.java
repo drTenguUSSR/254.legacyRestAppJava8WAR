@@ -5,7 +5,9 @@ import mil.teng254.legacy.dto.RequestDto;
 import mil.teng254.legacy.dto.ResponseDto;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.time.ZoneId;
@@ -16,6 +18,9 @@ import java.time.format.DateTimeFormatter;
 @Component
 @Slf4j
 public class PublicController {
+
+    @Context
+    private HttpServletRequest httpRequest;
 
     @GET
     @Path("/time")
@@ -50,6 +55,7 @@ public class PublicController {
     }
 
     private Response processRequest(RequestDto request) {
+        log.info("processRequest: remoteAdr={} localPort={}", httpRequest.getRemoteAddr(),httpRequest.getLocalPort());
         ResponseDto response = new ResponseDto();
 
         // Инкрементируем key
