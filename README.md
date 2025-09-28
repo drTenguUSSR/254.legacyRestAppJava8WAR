@@ -20,3 +20,5 @@ demo. Приложение на Java 8 для разворачивания на 
 - в web.xml параметр com.sun.jersey.api.json.POJOMappingFeature выключен (false)
 - сериализация JSON через JAXB
 - результат сборки - ROOT.war
+
+[Технические подробности](docs-dev/tech-notes.md)
