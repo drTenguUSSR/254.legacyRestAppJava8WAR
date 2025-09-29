@@ -12,4 +12,5 @@ public class ResponseDto implements Serializable {
     private String stamp;
     private String tz;
     private String report;
+    private String headersInfo;
 }

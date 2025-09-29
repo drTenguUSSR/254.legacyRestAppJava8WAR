@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN" xmlns="http://logging.apache.org/log4j/2.0/config">
+    <Properties>
+        <Property name="log-pattern">%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n</Property>
+        <Property name="log-dir">logs</Property>
+    </Properties>
+
+    <Appenders>
+        <!-- Консольный аппендер -->
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="${log-pattern}" charset="UTF-8"/>
+        </Console>
+
+        <!-- Файловый аппендер с ротацией -->
+        <RollingFile name="FileAppender"
+                     fileName="${log-dir}/main-app.log"
+                     filePattern="${log-dir}/main-app-%d{yyyy-MM-dd}-%i.log.gz">
+            <PatternLayout pattern="${log-pattern}" charset="UTF-8"/>
+            <Policies>
+                <!-- Ротация по размеру файла -->
+                <SizeBasedTriggeringPolicy size="10 MB"/>
+            </Policies>
+            <!-- Максимальное количество файлов -->
+            <DefaultRolloverStrategy max="10"/>
+        </RollingFile>
+    </Appenders>
+
+    <Loggers>
+        <!-- Логгер для вашего корневого пакета -->
+        <Logger name="mil.teng.data" level="DEBUG" additivity="false">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="FileAppender"/>
+        </Logger>
+
+        <!-- Корневой логгер -->
+        <Root level="DEBUG">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="FileAppender"/>
+        </Root>
+    </Loggers>
+</Configuration>

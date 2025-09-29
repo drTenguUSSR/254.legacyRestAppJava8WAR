@@ -23,6 +23,11 @@ Demo. Приложение на Java 8 для разворачивания на 
 
 [//]: # ([Технические подробности]&#40;docs-dev/tech-notes.md&#41;)
 
+## M25903. Получение Http-заголовков вне контекста контролера. Работает 2из3
+Способ №1. alfa. нерабочий. Через RequestContextHolder
+Способ №2. bravo. рабочий. получение через javax.servlet.Filter. извлечение - ThreadLocal&lt;String&gt;
+Способ №3. kilo. рабочий. получение через javax.servlet.Filter. извлечение - org.apache.logging.log4j.ThreadContext
+
 ## M25902. thymeleaf и интеграционные тесты
 
 - контролер special на JAXBElement&lt;RequestDto&gt;

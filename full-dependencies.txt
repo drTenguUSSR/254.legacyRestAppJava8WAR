@@ -1,0 +1,388 @@
+
+> Task :dependencies
+
+------------------------------------------------------------
+Root project '254.legacyRestAppJava8WAR'
+------------------------------------------------------------
+
+annotationProcessor - Annotation processors and their dependencies for source set 'main'.
+\--- org.projectlombok:lombok:1.18.20
+
+apiElements - API elements for main. (n)
+No dependencies
+
+archives - Configuration for archive artifacts. (n)
+No dependencies
+
+compileClasspath - Compile classpath for source set 'main'.
++--- org.projectlombok:lombok:1.18.20
++--- org.springframework:spring-web:5.2.8.RELEASE
+|    +--- org.springframework:spring-beans:5.2.8.RELEASE
+|    |    \--- org.springframework:spring-core:5.2.8.RELEASE
+|    |         \--- org.springframework:spring-jcl:5.2.8.RELEASE
+|    \--- org.springframework:spring-core:5.2.8.RELEASE (*)
++--- org.springframework:spring-context:5.2.8.RELEASE
+|    +--- org.springframework:spring-aop:5.2.8.RELEASE
+|    |    +--- org.springframework:spring-beans:5.2.8.RELEASE (*)
+|    |    \--- org.springframework:spring-core:5.2.8.RELEASE (*)
+|    +--- org.springframework:spring-beans:5.2.8.RELEASE (*)
+|    +--- org.springframework:spring-core:5.2.8.RELEASE (*)
+|    \--- org.springframework:spring-expression:5.2.8.RELEASE
+|         \--- org.springframework:spring-core:5.2.8.RELEASE (*)
++--- com.sun.jersey:jersey-bundle:1.19.4
+|    \--- javax.ws.rs:jsr311-api:1.1.1
++--- com.sun.jersey:jersey-json:1.19.4
+|    +--- org.codehaus.jettison:jettison:1.1
+|    +--- com.sun.xml.bind:jaxb-impl:2.2.3-1 -> 2.3.1
+|    +--- org.codehaus.jackson:jackson-core-asl:1.9.2
+|    +--- org.codehaus.jackson:jackson-mapper-asl:1.9.2
+|    |    \--- org.codehaus.jackson:jackson-core-asl:1.9.2
+|    +--- org.codehaus.jackson:jackson-jaxrs:1.9.2
+|    |    +--- org.codehaus.jackson:jackson-core-asl:1.9.2
+|    |    \--- org.codehaus.jackson:jackson-mapper-asl:1.9.2 (*)
+|    +--- org.codehaus.jackson:jackson-xc:1.9.2
+|    |    +--- org.codehaus.jackson:jackson-core-asl:1.9.2
+|    |    \--- org.codehaus.jackson:jackson-mapper-asl:1.9.2 (*)
+|    \--- com.sun.jersey:jersey-core:1.19.4
+|         \--- javax.ws.rs:jsr311-api:1.1.1
++--- com.sun.jersey.contribs:jersey-spring:1.19.4
+|    +--- com.sun.jersey:jersey-servlet:1.19.4
+|    |    \--- com.sun.jersey:jersey-server:1.19.4
+|    |         \--- com.sun.jersey:jersey-core:1.19.4 (*)
+|    +--- org.springframework:spring-core:[2.5.2,3) -> 5.2.8.RELEASE (*)
+|    +--- org.springframework:spring-beans:[2.5.2,3) -> 5.2.8.RELEASE (*)
+|    +--- org.springframework:spring-context:[2.5.2,3) -> 5.2.8.RELEASE (*)
+|    +--- org.springframework:spring-web:[2.5.2,3) -> 5.2.8.RELEASE (*)
+|    \--- org.springframework:spring-aop:[2.5.2,3) -> 5.2.8.RELEASE (*)
++--- org.thymeleaf:thymeleaf:3.0.15.RELEASE
+|    +--- ognl:ognl:3.1.26
+|    |    \--- org.javassist:javassist:3.20.0-GA
+|    +--- org.attoparser:attoparser:2.0.5.RELEASE
+|    +--- org.unbescape:unbescape:1.1.6.RELEASE
+|    \--- org.slf4j:slf4j-api:1.7.25 -> 1.7.30
++--- org.thymeleaf:thymeleaf-spring5:3.0.15.RELEASE
+|    +--- org.thymeleaf:thymeleaf:3.0.15.RELEASE (*)
+|    \--- org.slf4j:slf4j-api:1.7.25 -> 1.7.30
++--- org.thymeleaf.extras:thymeleaf-extras-java8time:3.0.4.RELEASE
+|    +--- org.thymeleaf:thymeleaf:3.0.11.RELEASE -> 3.0.15.RELEASE (*)
+|    \--- org.slf4j:slf4j-api:1.7.25 -> 1.7.30
++--- com.google.guava:guava:20.0
++--- org.apache.logging.log4j:log4j-api:2.4
++--- org.slf4j:slf4j-api:1.7.30
++--- javax.servlet:javax.servlet-api:3.1.0
++--- javax.xml.bind:jaxb-api:2.3.1
+|    \--- javax.activation:javax.activation-api:1.2.0
++--- com.sun.xml.bind:jaxb-core:2.3.0.1
+\--- com.sun.xml.bind:jaxb-impl:2.3.1
+
+compileOnly - Compile only dependencies for source set 'main'. (n)
+\--- org.projectlombok:lombok:1.18.20 (n)
+
+default - Configuration for default artifacts. (n)
+No dependencies
+
+implementation - Implementation only dependencies for source set 'main'. (n)
++--- org.springframework:spring-web:5.2.8.RELEASE (n)
++--- org.springframework:spring-context:5.2.8.RELEASE (n)
++--- com.sun.jersey:jersey-bundle:1.19.4 (n)
++--- com.sun.jersey:jersey-json:1.19.4 (n)
++--- com.sun.jersey.contribs:jersey-spring:1.19.4 (n)
++--- org.thymeleaf:thymeleaf:3.0.15.RELEASE (n)
++--- org.thymeleaf:thymeleaf-spring5:3.0.15.RELEASE (n)
++--- org.thymeleaf.extras:thymeleaf-extras-java8time:3.0.4.RELEASE (n)
++--- com.google.guava:guava:20.0 (n)
++--- org.apache.logging.log4j:log4j-api:2.4 (n)
+\--- org.slf4j:slf4j-api:1.7.30 (n)
+
+providedCompile - Additional compile classpath for libraries that should not be part of the WAR archive.
++--- javax.servlet:javax.servlet-api:3.1.0
++--- javax.xml.bind:jaxb-api:2.3.1
+|    \--- javax.activation:javax.activation-api:1.2.0
++--- com.sun.xml.bind:jaxb-core:2.3.0.1
+\--- com.sun.xml.bind:jaxb-impl:2.3.1
+
+providedRuntime - Additional runtime classpath for libraries that should not be part of the WAR archive.
++--- javax.servlet:javax.servlet-api:3.1.0
++--- javax.xml.bind:jaxb-api:2.3.1
+|    \--- javax.activation:javax.activation-api:1.2.0
++--- com.sun.xml.bind:jaxb-core:2.3.0.1
+\--- com.sun.xml.bind:jaxb-impl:2.3.1
+
+runtimeClasspath - Runtime classpath of source set 'main'.
++--- org.springframework:spring-web:5.2.8.RELEASE
+|    +--- org.springframework:spring-beans:5.2.8.RELEASE
+|    |    \--- org.springframework:spring-core:5.2.8.RELEASE
+|    |         \--- org.springframework:spring-jcl:5.2.8.RELEASE
+|    \--- org.springframework:spring-core:5.2.8.RELEASE (*)
++--- org.springframework:spring-context:5.2.8.RELEASE
+|    +--- org.springframework:spring-aop:5.2.8.RELEASE
+|    |    +--- org.springframework:spring-beans:5.2.8.RELEASE (*)
+|    |    \--- org.springframework:spring-core:5.2.8.RELEASE (*)
+|    +--- org.springframework:spring-beans:5.2.8.RELEASE (*)
+|    +--- org.springframework:spring-core:5.2.8.RELEASE (*)
+|    \--- org.springframework:spring-expression:5.2.8.RELEASE
+|         \--- org.springframework:spring-core:5.2.8.RELEASE (*)
++--- com.sun.jersey:jersey-bundle:1.19.4
+|    \--- javax.ws.rs:jsr311-api:1.1.1
++--- com.sun.jersey:jersey-json:1.19.4
+|    +--- org.codehaus.jettison:jettison:1.1
+|    +--- com.sun.xml.bind:jaxb-impl:2.2.3-1 -> 2.3.1
+|    +--- org.codehaus.jackson:jackson-core-asl:1.9.2
+|    +--- org.codehaus.jackson:jackson-mapper-asl:1.9.2
+|    |    \--- org.codehaus.jackson:jackson-core-asl:1.9.2
+|    +--- org.codehaus.jackson:jackson-jaxrs:1.9.2
+|    |    +--- org.codehaus.jackson:jackson-core-asl:1.9.2
+|    |    \--- org.codehaus.jackson:jackson-mapper-asl:1.9.2 (*)
+|    +--- org.codehaus.jackson:jackson-xc:1.9.2
+|    |    +--- org.codehaus.jackson:jackson-core-asl:1.9.2
+|    |    \--- org.codehaus.jackson:jackson-mapper-asl:1.9.2 (*)
+|    \--- com.sun.jersey:jersey-core:1.19.4
+|         \--- javax.ws.rs:jsr311-api:1.1.1
++--- com.sun.jersey.contribs:jersey-spring:1.19.4
+|    +--- com.sun.jersey:jersey-servlet:1.19.4
+|    |    \--- com.sun.jersey:jersey-server:1.19.4
+|    |         \--- com.sun.jersey:jersey-core:1.19.4 (*)
+|    +--- org.springframework:spring-core:[2.5.2,3) -> 5.2.8.RELEASE (*)
+|    +--- org.springframework:spring-beans:[2.5.2,3) -> 5.2.8.RELEASE (*)
+|    +--- org.springframework:spring-context:[2.5.2,3) -> 5.2.8.RELEASE (*)
+|    +--- org.springframework:spring-web:[2.5.2,3) -> 5.2.8.RELEASE (*)
+|    \--- org.springframework:spring-aop:[2.5.2,3) -> 5.2.8.RELEASE (*)
++--- org.thymeleaf:thymeleaf:3.0.15.RELEASE
+|    +--- ognl:ognl:3.1.26
+|    |    \--- org.javassist:javassist:3.20.0-GA
+|    +--- org.attoparser:attoparser:2.0.5.RELEASE
+|    +--- org.unbescape:unbescape:1.1.6.RELEASE
+|    \--- org.slf4j:slf4j-api:1.7.25 -> 1.7.30
++--- org.thymeleaf:thymeleaf-spring5:3.0.15.RELEASE
+|    +--- org.thymeleaf:thymeleaf:3.0.15.RELEASE (*)
+|    \--- org.slf4j:slf4j-api:1.7.25 -> 1.7.30
++--- org.thymeleaf.extras:thymeleaf-extras-java8time:3.0.4.RELEASE
+|    +--- org.thymeleaf:thymeleaf:3.0.11.RELEASE -> 3.0.15.RELEASE (*)
+|    \--- org.slf4j:slf4j-api:1.7.25 -> 1.7.30
++--- com.google.guava:guava:20.0
++--- org.apache.logging.log4j:log4j-api:2.4
++--- org.slf4j:slf4j-api:1.7.30
++--- javax.servlet:javax.servlet-api:3.1.0
++--- javax.xml.bind:jaxb-api:2.3.1
+|    \--- javax.activation:javax.activation-api:1.2.0
++--- com.sun.xml.bind:jaxb-core:2.3.0.1
++--- com.sun.xml.bind:jaxb-impl:2.3.1
++--- org.apache.logging.log4j:log4j-slf4j-impl:2.4
+|    +--- org.slf4j:slf4j-api:1.7.12 -> 1.7.30
+|    \--- org.apache.logging.log4j:log4j-api:2.4
+\--- org.apache.logging.log4j:log4j-core:2.4
+     \--- org.apache.logging.log4j:log4j-api:2.4
+
+runtimeElements - Elements of runtime for main. (n)
+No dependencies
+
+runtimeOnly - Runtime only dependencies for source set 'main'. (n)
++--- org.apache.logging.log4j:log4j-slf4j-impl:2.4 (n)
+\--- org.apache.logging.log4j:log4j-core:2.4 (n)
+
+testAnnotationProcessor - Annotation processors and their dependencies for source set 'test'.
+\--- org.projectlombok:lombok:1.18.20
+
+testCompileClasspath - Compile classpath for source set 'test'.
++--- org.springframework:spring-web:5.2.8.RELEASE
+|    +--- org.springframework:spring-beans:5.2.8.RELEASE
+|    |    \--- org.springframework:spring-core:5.2.8.RELEASE
+|    |         \--- org.springframework:spring-jcl:5.2.8.RELEASE
+|    \--- org.springframework:spring-core:5.2.8.RELEASE (*)
++--- org.springframework:spring-context:5.2.8.RELEASE
+|    +--- org.springframework:spring-aop:5.2.8.RELEASE
+|    |    +--- org.springframework:spring-beans:5.2.8.RELEASE (*)
+|    |    \--- org.springframework:spring-core:5.2.8.RELEASE (*)
+|    +--- org.springframework:spring-beans:5.2.8.RELEASE (*)
+|    +--- org.springframework:spring-core:5.2.8.RELEASE (*)
+|    \--- org.springframework:spring-expression:5.2.8.RELEASE
+|         \--- org.springframework:spring-core:5.2.8.RELEASE (*)
++--- com.sun.jersey:jersey-bundle:1.19.4
+|    \--- javax.ws.rs:jsr311-api:1.1.1
++--- com.sun.jersey:jersey-json:1.19.4
+|    +--- org.codehaus.jettison:jettison:1.1
+|    +--- com.sun.xml.bind:jaxb-impl:2.2.3-1 -> 2.3.1
+|    +--- org.codehaus.jackson:jackson-core-asl:1.9.2
+|    +--- org.codehaus.jackson:jackson-mapper-asl:1.9.2
+|    |    \--- org.codehaus.jackson:jackson-core-asl:1.9.2
+|    +--- org.codehaus.jackson:jackson-jaxrs:1.9.2
+|    |    +--- org.codehaus.jackson:jackson-core-asl:1.9.2
+|    |    \--- org.codehaus.jackson:jackson-mapper-asl:1.9.2 (*)
+|    +--- org.codehaus.jackson:jackson-xc:1.9.2
+|    |    +--- org.codehaus.jackson:jackson-core-asl:1.9.2
+|    |    \--- org.codehaus.jackson:jackson-mapper-asl:1.9.2 (*)
+|    \--- com.sun.jersey:jersey-core:1.19.4
+|         \--- javax.ws.rs:jsr311-api:1.1.1
++--- com.sun.jersey.contribs:jersey-spring:1.19.4
+|    +--- com.sun.jersey:jersey-servlet:1.19.4
+|    |    \--- com.sun.jersey:jersey-server:1.19.4
+|    |         \--- com.sun.jersey:jersey-core:1.19.4 (*)
+|    +--- org.springframework:spring-core:[2.5.2,3) -> 5.2.8.RELEASE (*)
+|    +--- org.springframework:spring-beans:[2.5.2,3) -> 5.2.8.RELEASE (*)
+|    +--- org.springframework:spring-context:[2.5.2,3) -> 5.2.8.RELEASE (*)
+|    +--- org.springframework:spring-web:[2.5.2,3) -> 5.2.8.RELEASE (*)
+|    \--- org.springframework:spring-aop:[2.5.2,3) -> 5.2.8.RELEASE (*)
++--- org.thymeleaf:thymeleaf:3.0.15.RELEASE
+|    +--- ognl:ognl:3.1.26
+|    |    \--- org.javassist:javassist:3.20.0-GA
+|    +--- org.attoparser:attoparser:2.0.5.RELEASE
+|    +--- org.unbescape:unbescape:1.1.6.RELEASE
+|    \--- org.slf4j:slf4j-api:1.7.25 -> 1.7.30
++--- org.thymeleaf:thymeleaf-spring5:3.0.15.RELEASE
+|    +--- org.thymeleaf:thymeleaf:3.0.15.RELEASE (*)
+|    \--- org.slf4j:slf4j-api:1.7.25 -> 1.7.30
++--- org.thymeleaf.extras:thymeleaf-extras-java8time:3.0.4.RELEASE
+|    +--- org.thymeleaf:thymeleaf:3.0.11.RELEASE -> 3.0.15.RELEASE (*)
+|    \--- org.slf4j:slf4j-api:1.7.25 -> 1.7.30
++--- com.google.guava:guava:20.0
++--- org.apache.logging.log4j:log4j-api:2.4
++--- org.slf4j:slf4j-api:1.7.30
++--- javax.servlet:javax.servlet-api:3.1.0
++--- javax.xml.bind:jaxb-api:2.3.1
+|    \--- javax.activation:javax.activation-api:1.2.0
++--- com.sun.xml.bind:jaxb-core:2.3.0.1
++--- com.sun.xml.bind:jaxb-impl:2.3.1
++--- org.projectlombok:lombok:1.18.20
++--- junit:junit:4.12
+|    \--- org.hamcrest:hamcrest-core:1.3
++--- org.springframework:spring-test:5.2.8.RELEASE
+|    \--- org.springframework:spring-core:5.2.8.RELEASE (*)
++--- com.sun.jersey.jersey-test-framework:jersey-test-framework-grizzly:1.19.4
+|    +--- com.sun.grizzly:grizzly-servlet-webserver:1.9.45
+|    |    +--- com.sun.grizzly:grizzly-http:1.9.45
+|    |    |    +--- com.sun.grizzly:grizzly-framework:1.9.45
+|    |    |    |    \--- com.sun.grizzly:grizzly-utils:1.9.45
+|    |    |    |         \--- com.sun.grizzly:grizzly-lzma:1.9.45
+|    |    |    +--- com.sun.grizzly:grizzly-rcm:1.9.45
+|    |    |    |    +--- com.sun.grizzly:grizzly-framework:1.9.45 (*)
+|    |    |    |    \--- com.sun.grizzly:grizzly-utils:1.9.45 (*)
+|    |    |    +--- com.sun.grizzly:grizzly-portunif:1.9.45
+|    |    |    |    \--- com.sun.grizzly:grizzly-framework:1.9.45 (*)
+|    |    |    \--- com.sun.grizzly:grizzly-utils:1.9.45 (*)
+|    |    +--- com.sun.grizzly:grizzly-http-servlet:1.9.45
+|    |    |    \--- com.sun.grizzly:grizzly-utils:1.9.45 (*)
+|    |    \--- javax.servlet:servlet-api:2.5
+|    +--- com.sun.jersey.jersey-test-framework:jersey-test-framework-core:1.19.4
+|    |    +--- javax.servlet:javax.servlet-api:3.0.1 -> 3.1.0
+|    |    +--- junit:junit:4.8.2 -> 4.12 (*)
+|    |    +--- com.sun.jersey:jersey-servlet:1.19.4 (*)
+|    |    \--- com.sun.jersey:jersey-client:1.19.4
+|    |         \--- com.sun.jersey:jersey-core:1.19.4 (*)
+|    \--- com.sun.jersey:jersey-grizzly:1.19.4
+|         \--- com.sun.jersey:jersey-servlet:1.19.4 (*)
+\--- com.sun.jersey:jersey-client:1.19.4 (*)
+
+testCompileOnly - Compile only dependencies for source set 'test'. (n)
+\--- org.projectlombok:lombok:1.18.20 (n)
+
+testImplementation - Implementation only dependencies for source set 'test'. (n)
++--- junit:junit:4.12 (n)
++--- org.springframework:spring-test:5.2.8.RELEASE (n)
++--- com.sun.jersey.jersey-test-framework:jersey-test-framework-grizzly:1.19.4 (n)
++--- com.sun.jersey:jersey-client:1.19.4 (n)
+\--- javax.xml.bind:jaxb-api:2.3.1 (n)
+
+testRuntimeClasspath - Runtime classpath of source set 'test'.
++--- org.springframework:spring-web:5.2.8.RELEASE
+|    +--- org.springframework:spring-beans:5.2.8.RELEASE
+|    |    \--- org.springframework:spring-core:5.2.8.RELEASE
+|    |         \--- org.springframework:spring-jcl:5.2.8.RELEASE
+|    \--- org.springframework:spring-core:5.2.8.RELEASE (*)
++--- org.springframework:spring-context:5.2.8.RELEASE
+|    +--- org.springframework:spring-aop:5.2.8.RELEASE
+|    |    +--- org.springframework:spring-beans:5.2.8.RELEASE (*)
+|    |    \--- org.springframework:spring-core:5.2.8.RELEASE (*)
+|    +--- org.springframework:spring-beans:5.2.8.RELEASE (*)
+|    +--- org.springframework:spring-core:5.2.8.RELEASE (*)
+|    \--- org.springframework:spring-expression:5.2.8.RELEASE
+|         \--- org.springframework:spring-core:5.2.8.RELEASE (*)
++--- com.sun.jersey:jersey-bundle:1.19.4
+|    \--- javax.ws.rs:jsr311-api:1.1.1
++--- com.sun.jersey:jersey-json:1.19.4
+|    +--- org.codehaus.jettison:jettison:1.1
+|    +--- com.sun.xml.bind:jaxb-impl:2.2.3-1 -> 2.3.1
+|    +--- org.codehaus.jackson:jackson-core-asl:1.9.2
+|    +--- org.codehaus.jackson:jackson-mapper-asl:1.9.2
+|    |    \--- org.codehaus.jackson:jackson-core-asl:1.9.2
+|    +--- org.codehaus.jackson:jackson-jaxrs:1.9.2
+|    |    +--- org.codehaus.jackson:jackson-core-asl:1.9.2
+|    |    \--- org.codehaus.jackson:jackson-mapper-asl:1.9.2 (*)
+|    +--- org.codehaus.jackson:jackson-xc:1.9.2
+|    |    +--- org.codehaus.jackson:jackson-core-asl:1.9.2
+|    |    \--- org.codehaus.jackson:jackson-mapper-asl:1.9.2 (*)
+|    \--- com.sun.jersey:jersey-core:1.19.4
+|         \--- javax.ws.rs:jsr311-api:1.1.1
++--- com.sun.jersey.contribs:jersey-spring:1.19.4
+|    +--- com.sun.jersey:jersey-servlet:1.19.4
+|    |    \--- com.sun.jersey:jersey-server:1.19.4
+|    |         \--- com.sun.jersey:jersey-core:1.19.4 (*)
+|    +--- org.springframework:spring-core:[2.5.2,3) -> 5.2.8.RELEASE (*)
+|    +--- org.springframework:spring-beans:[2.5.2,3) -> 5.2.8.RELEASE (*)
+|    +--- org.springframework:spring-context:[2.5.2,3) -> 5.2.8.RELEASE (*)
+|    +--- org.springframework:spring-web:[2.5.2,3) -> 5.2.8.RELEASE (*)
+|    \--- org.springframework:spring-aop:[2.5.2,3) -> 5.2.8.RELEASE (*)
++--- org.thymeleaf:thymeleaf:3.0.15.RELEASE
+|    +--- ognl:ognl:3.1.26
+|    |    \--- org.javassist:javassist:3.20.0-GA
+|    +--- org.attoparser:attoparser:2.0.5.RELEASE
+|    +--- org.unbescape:unbescape:1.1.6.RELEASE
+|    \--- org.slf4j:slf4j-api:1.7.25 -> 1.7.30
++--- org.thymeleaf:thymeleaf-spring5:3.0.15.RELEASE
+|    +--- org.thymeleaf:thymeleaf:3.0.15.RELEASE (*)
+|    \--- org.slf4j:slf4j-api:1.7.25 -> 1.7.30
++--- org.thymeleaf.extras:thymeleaf-extras-java8time:3.0.4.RELEASE
+|    +--- org.thymeleaf:thymeleaf:3.0.11.RELEASE -> 3.0.15.RELEASE (*)
+|    \--- org.slf4j:slf4j-api:1.7.25 -> 1.7.30
++--- com.google.guava:guava:20.0
++--- org.apache.logging.log4j:log4j-api:2.4
++--- org.slf4j:slf4j-api:1.7.30
++--- javax.servlet:javax.servlet-api:3.1.0
++--- javax.xml.bind:jaxb-api:2.3.1
+|    \--- javax.activation:javax.activation-api:1.2.0
++--- com.sun.xml.bind:jaxb-core:2.3.0.1
++--- com.sun.xml.bind:jaxb-impl:2.3.1
++--- org.apache.logging.log4j:log4j-slf4j-impl:2.4
+|    +--- org.slf4j:slf4j-api:1.7.12 -> 1.7.30
+|    \--- org.apache.logging.log4j:log4j-api:2.4
++--- org.apache.logging.log4j:log4j-core:2.4
+|    \--- org.apache.logging.log4j:log4j-api:2.4
++--- junit:junit:4.12
+|    \--- org.hamcrest:hamcrest-core:1.3
++--- org.springframework:spring-test:5.2.8.RELEASE
+|    \--- org.springframework:spring-core:5.2.8.RELEASE (*)
++--- com.sun.jersey.jersey-test-framework:jersey-test-framework-grizzly:1.19.4
+|    +--- com.sun.grizzly:grizzly-servlet-webserver:1.9.45
+|    |    +--- com.sun.grizzly:grizzly-http:1.9.45
+|    |    |    +--- com.sun.grizzly:grizzly-framework:1.9.45
+|    |    |    |    \--- com.sun.grizzly:grizzly-utils:1.9.45
+|    |    |    |         \--- com.sun.grizzly:grizzly-lzma:1.9.45
+|    |    |    +--- com.sun.grizzly:grizzly-rcm:1.9.45
+|    |    |    |    +--- com.sun.grizzly:grizzly-framework:1.9.45 (*)
+|    |    |    |    \--- com.sun.grizzly:grizzly-utils:1.9.45 (*)
+|    |    |    +--- com.sun.grizzly:grizzly-portunif:1.9.45
+|    |    |    |    \--- com.sun.grizzly:grizzly-framework:1.9.45 (*)
+|    |    |    \--- com.sun.grizzly:grizzly-utils:1.9.45 (*)
+|    |    +--- com.sun.grizzly:grizzly-http-servlet:1.9.45
+|    |    |    \--- com.sun.grizzly:grizzly-utils:1.9.45 (*)
+|    |    \--- javax.servlet:servlet-api:2.5
+|    +--- com.sun.jersey.jersey-test-framework:jersey-test-framework-core:1.19.4
+|    |    +--- javax.servlet:javax.servlet-api:3.0.1 -> 3.1.0
+|    |    +--- junit:junit:4.8.2 -> 4.12 (*)
+|    |    +--- com.sun.jersey:jersey-servlet:1.19.4 (*)
+|    |    \--- com.sun.jersey:jersey-client:1.19.4
+|    |         \--- com.sun.jersey:jersey-core:1.19.4 (*)
+|    \--- com.sun.jersey:jersey-grizzly:1.19.4
+|         \--- com.sun.jersey:jersey-servlet:1.19.4 (*)
+\--- com.sun.jersey:jersey-client:1.19.4 (*)
+
+testRuntimeOnly - Runtime only dependencies for source set 'test'. (n)
+No dependencies
+
+(*) - dependencies omitted (listed previously)
+
+(n) - Not resolved (configuration is not meant to be resolved)
+
+A web-based, searchable dependency report is available by adding the --scan option.
+
+BUILD SUCCESSFUL in 1s
+1 actionable task: 1 executed

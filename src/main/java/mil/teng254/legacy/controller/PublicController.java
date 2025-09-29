@@ -3,6 +3,8 @@ package mil.teng254.legacy.controller;
 import lombok.extern.slf4j.Slf4j;
 import mil.teng254.legacy.dto.RequestDto;
 import mil.teng254.legacy.dto.ResponseDto;
+import mil.teng254.legacy.services.HelloServices;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
@@ -21,6 +23,9 @@ public class PublicController {
 
     @Context
     private HttpServletRequest httpRequest;
+
+    @Autowired
+    private HelloServices helloServices;
 
     @GET
     @Path("/time")
@@ -43,7 +48,8 @@ public class PublicController {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response helloPath(RequestDto request) {
-        return processRequest(request);
+
+        return helloServices.processRequest(request);
     }
 
     @POST
@@ -51,25 +57,9 @@ public class PublicController {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response helloRest(RequestDto request) {
-        return processRequest(request);
+        log.info("helloRest. processRequest: remoteAdr={} localPort={}", httpRequest.getRemoteAddr(), httpRequest.getLocalPort());
+        return helloServices.processRequest(request);
     }
 
-    private Response processRequest(RequestDto request) {
-        log.info("processRequest: remoteAdr={} localPort={}", httpRequest.getRemoteAddr(),httpRequest.getLocalPort());
-        ResponseDto response = new ResponseDto();
 
-        // Инкрементируем key
-        response.setRes(request.getKey() + 1);
-
-        // Парсим время, добавляем 1 час и форматируем обратно
-        ZonedDateTime stampTime = ZonedDateTime.parse(request.getStamp());
-        ZonedDateTime newTime = stampTime.plusHours(1);
-        response.setStamp(newTime.format(DateTimeFormatter.ISO_INSTANT));
-
-        // Получаем временную зону сервера
-        ZoneId zone = ZoneId.systemDefault();
-        response.setTz(zone.getRules().getOffset(newTime.toInstant()).toString());
-
-        return Response.ok(response).build();
-    }
 }
