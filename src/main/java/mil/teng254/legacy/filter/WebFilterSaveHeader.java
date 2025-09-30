@@ -3,6 +3,8 @@ package mil.teng254.legacy.filter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.ThreadContext;
 import org.springframework.util.StringUtils;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
@@ -31,11 +33,10 @@ public class WebFilterSaveHeader implements Filter {
     }
 
     public static String getHeaderAlfa() {
-//        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder
-//                .currentRequestAttributes())
-//                .getRequest();
-//        String res = request.getHeader(CUST_HTTP_HEADER_ALFA);
-        String res="!no-data!";
+        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder
+                .currentRequestAttributes())
+                .getRequest();
+        String res = request.getHeader(CUST_HTTP_HEADER_ALFA);
         return res;
     }
 

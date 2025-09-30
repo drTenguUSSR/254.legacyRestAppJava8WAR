@@ -15,17 +15,17 @@
 - контролеры аннотированы `@Consumes(MediaType.APPLICATION_JSON)`
   и `@Produces(MediaType.APPLICATION_JSON)`
 - контролеры возвращают тип `javax.ws.rs.core.Response`;
-- все типы данных, используемые как параметры контроллера аннотированы @XmlRootElement
-- все типы данных, используемые внутри javax.ws.rs.core.Response возвращаемые контроллерами, аннотированы @XmlRootElement
+- все типы данных, используемые как параметры контроллера аннотированы ```@XmlRootElement```
+- все типы данных, используемые внутри ```javax.ws.rs.core.Response``` возвращаемые контроллерами, аннотированы @XmlRootElement
 - ObjectFactory не применяется;
-- JAXBElement провайдер не применяется (com.sun.jersey.json.impl.JAXBElementProvider)
+- JAXBElement провайдер не применяется (```com.sun.jersey.json.impl.JAXBElementProvider```)
 
 ## базовый промпт для тестов
 
 Как написать интеграционный тест для rest контролера?
 При этом:
-- контролер обрабатывает запрос http://some.host/api/point
-- контролер возвращает структуру { "key1":"aaa","key2":42}
+- контролер обрабатывает запрос ```http://some.host/api/point```
+- контролер возвращает структуру ```{ "key1":"aaa","key2":42}```
 - для удаленного вызова используется WebResource из Jersey 1.x
 - используется тестовый контейнер (Grizzly)
 - используется  Jersey Test Framework
@@ -33,9 +33,9 @@
 - Использовать SpringJUnit4ClassRunner для загрузки Spring контекста
 - Создать и запустить Jersey сервер программно, используя Spring контекст.
 
-## Цель применения JAXBElement&lt;RequestDto&gt;
+## Цель применения ```JAXBElement<RequestDto>```
 
-Использование JAXBElement<RequestDto> request необходимо в более сложных
+Использование ```JAXBElement<RequestDto>``` request необходимо в более сложных
 случаях, когда информации в аннотациях самого класса недостаточно для
 однозначного преобразования.
 
@@ -48,7 +48,7 @@
    глобальных XML-элементов, соответствующих одному Java-типу. JAXBElement
    сохраняет информацию о том, какой именно элемент был прочитан из XML.
 
-3. Отсутствие аннотации @XmlRootElement: Если класс не помечен этой аннотацией
+3. Отсутствие аннотации ```@XmlRootElement```: Если класс не помечен этой аннотацией
    (например, когда классы генерируются из XSD-схемы), то при маршалинге (преобразовании
    объекта в XML/JSON) может потребоваться JAXBElement, чтобы явно задать
    имя корневого элемента
@@ -73,7 +73,7 @@ set JPDA_SUSPEND=n
 
 call bin\catalina.bat jpda start
 ````
-альтернатива - указать org.apache.tomcat.util.digester.PROPERTY_SOURCE в
+альтернатива - указать ```org.apache.tomcat.util.digester.PROPERTY_SOURCE``` в
 conf\catalina.properties
 
 - новый файл go-stop.cmd

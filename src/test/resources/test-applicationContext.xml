@@ -10,6 +10,8 @@
 
     <context:component-scan base-package="mil.teng254.legacy"/>
 
+    <bean id="requestContextListener" class="org.springframework.web.context.request.RequestContextListener"/>
+
     <!-- Дополнительные бины для тестов -->
 
     <bean id="templateResolver" class="org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver">

@@ -6,6 +6,8 @@ import mil.teng254.legacy.dto.ResponseDto;
 import mil.teng254.legacy.services.HelloServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
@@ -48,7 +50,6 @@ public class PublicController {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response helloPath(RequestDto request) {
-
         return helloServices.processRequest(request);
     }
 
@@ -56,10 +57,10 @@ public class PublicController {
     @Path("/hello-rest")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response helloRest(RequestDto request) {
+    public Response helloRest(RequestDto request, @HeaderParam(StaticHolder.HTTP_HEADER_TEST_ID) String testId) {
         log.info("helloRest. processRequest: remoteAdr={} localPort={}", httpRequest.getRemoteAddr(), httpRequest.getLocalPort());
+        StaticHolder.overrideRequestAttributes(testId);
+        //TODO: по окончании обработки запроса, нужно очистить контекст. в идеале - восстановить предыдущий (до override)
         return helloServices.processRequest(request);
     }
-
-
 }
