@@ -58,6 +58,7 @@ public class WebFilterSaveHeader implements Filter {
     private void putHeader(ServletRequest servletRequest) {
         HttpServletRequest req = (HttpServletRequest) servletRequest;
         String custB = req.getHeader(CUST_HTTP_HEADER_BRAVO);
+        log.debug("putHeader: custB=!{}!",custB);
         if (StringUtils.hasText(custB)) {
             CUST_BRAVO.set(custB);
         }

@@ -10,20 +10,20 @@ public class SpringContextHolder implements ApplicationContextAware {
 
     private static ApplicationContext applicationContext;
 
+//    public static void setContext(ApplicationContext applicationContext) {
+//        if (SpringContextHolder.applicationContext == null) {
+//            SpringContextHolder.applicationContext = applicationContext;
+//        }
+//    }
+//
+//    public static ApplicationContext getApplicationContext() {
+//        assertApplicationContext();
+//        return applicationContext;
+//    }
+
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         SpringContextHolder.applicationContext = applicationContext;
-    }
-
-    public static void setContext(ApplicationContext applicationContext) {
-        if (SpringContextHolder.applicationContext == null) {
-            SpringContextHolder.applicationContext = applicationContext;
-        }
-    }
-
-    public static ApplicationContext getApplicationContext() {
-        assertApplicationContext();
-        return applicationContext;
     }
 
     @SuppressWarnings("unchecked")
@@ -35,6 +35,11 @@ public class SpringContextHolder implements ApplicationContextAware {
     public static <T> T getBean(Class<T> requiredType) {
         assertApplicationContext();
         return applicationContext.getBean(requiredType);
+    }
+
+    public static <T> T getBean(String beanName, Class<T> requiredType) {
+        assertApplicationContext();
+        return applicationContext.getBean(beanName, requiredType);
     }
 
     private static void assertApplicationContext() {

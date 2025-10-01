@@ -6,8 +6,8 @@ import mil.teng254.legacy.dto.ResponseDto;
 import mil.teng254.legacy.services.HelloServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
@@ -17,6 +17,7 @@ import javax.ws.rs.core.Response;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Enumeration;
 
 @Path("/public")
 @Component
@@ -50,17 +51,32 @@ public class PublicController {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response helloPath(RequestDto request) {
-        return helloServices.processRequest(request);
+        ResponseDto resp = helloServices.processRequest(request);
+        return Response.ok(resp).build();
     }
 
     @POST
     @Path("/hello-rest")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response helloRest(RequestDto request, @HeaderParam(StaticHolder.HTTP_HEADER_TEST_ID) String testId) {
-        log.info("helloRest. processRequest: remoteAdr={} localPort={}", httpRequest.getRemoteAddr(), httpRequest.getLocalPort());
-        StaticHolder.overrideRequestAttributes(testId);
+    public Response helloRest(RequestDto request,
+                              @Context HttpServletRequest httpRequest,
+                              @HeaderParam(StaticHolder.HTTP_HEADER_TEST_ID) String testId
+    ) {
+        log.info("helloRest. processRequest: dto.key={} remoteAdr={} localPort={} req.Method={} req.URI={}",
+                request.getKey(),
+                httpRequest.getRemoteAddr(), httpRequest.getLocalPort(),
+                httpRequest.getMethod(),httpRequest.getRequestURI());
+        StaticHolder.dumpRequestInfo("param",httpRequest);
+        StaticHolder.overrideRequestAttributes(testId,httpRequest);
+
+        HttpServletRequest req2 = ((ServletRequestAttributes) RequestContextHolder
+                .currentRequestAttributes())
+                .getRequest();
+        StaticHolder.dumpRequestInfo("inside",req2);
+
         //TODO: по окончании обработки запроса, нужно очистить контекст. в идеале - восстановить предыдущий (до override)
-        return helloServices.processRequest(request);
+        ResponseDto resp = helloServices.processRequest(request);
+        return Response.ok(resp).build();
     }
 }

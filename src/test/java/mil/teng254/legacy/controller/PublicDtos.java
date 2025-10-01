@@ -12,5 +12,6 @@ public class PublicDtos {
         private String stamp;
         private String tz;
         private String report;
+        private String headersInfo;
     }
 }

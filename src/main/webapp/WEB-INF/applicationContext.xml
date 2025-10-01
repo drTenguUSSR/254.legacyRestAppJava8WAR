@@ -9,6 +9,8 @@
 
     <context:component-scan base-package="mil.teng254.legacy"/>
 
+    <bean id="serviceRequestUpdater" class="mil.teng254.legacy.services.ServiceRequestUpdaterImpl" />
+
     <bean id="templateResolver" class="org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver">
         <property name="prefix" value="classpath:/templates/" />
         <property name="suffix" value=".html" />

@@ -10,6 +10,8 @@
 
     <context:component-scan base-package="mil.teng254.legacy"/>
 
+    <bean id="serviceRequestUpdater" class="mil.teng254.legacy.services.ServiceRequestUpdater4Test" />
+
     <bean id="requestContextListener" class="org.springframework.web.context.request.RequestContextListener"/>
 
     <!-- Дополнительные бины для тестов -->

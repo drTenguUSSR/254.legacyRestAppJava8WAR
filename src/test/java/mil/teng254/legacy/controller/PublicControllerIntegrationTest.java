@@ -71,9 +71,9 @@ private WebApplicationContext applicationContext;
         MockHttpServletResponse response = new MockHttpServletResponse();
 
         // Устанавливаем необходимые атрибуты запроса
-        request.setMethod("POST");
-        request.setRequestURI("/api/public/hello-rest");
-        request.setContentType(MediaType.APPLICATION_JSON);
+        //request.setMethod("POST");
+        //request.setRequestURI("/api/publicERR/hello-rest");
+        //request.setContentType(MediaType.APPLICATION_JSON);
         String testId = UUID.randomUUID().toString();
         log.debug("setUp. testId={}",testId);
         request.setAttribute(TEST_ID_ATT, testId);
@@ -146,6 +146,27 @@ private WebApplicationContext applicationContext;
         Assert.assertEquals(Long.valueOf(101), respData.getRes());
         Assert.assertEquals("2025-06-20T12:24:36Z", respData.getStamp());
         Assert.assertEquals("+03:00", respData.getTz());
+    }
+
+    @Test
+    public void validPostHelloRestMultiHeader() {
+        log.debug("validPostHelloRest_min. testId={}",getTestId());
+        WebResource webResource = resource().path("/public/hello-rest");
+
+        String srcData = "{\"key\": 150, \"stamp\":\"2025-06-20T11:24:36Z\"}";
+        ClientResponse response = webResource
+                .header(StaticHolder.HTTP_HEADER_TEST_ID,getTestId())
+                .header("X-Cust-Alfa","AA01")
+                .header("X-Cust-Bravo","BB02")
+                .header("X-Cust-Kilo","KK03")
+                .accept(MediaType.APPLICATION_JSON)
+                .type(MediaType.APPLICATION_JSON)
+                .post(ClientResponse.class, srcData);
+        // статус
+        Assert.assertEquals(200, response.getStatus());
+        PublicDtos.ResponseDto respData = response.getEntity(PublicDtos.ResponseDto.class);
+        Assert.assertEquals(Long.valueOf(151), respData.getRes());
+        Assert.assertEquals("alfa=AA01;bravo=BB02;kilo=KK03;", respData.getHeadersInfo());
     }
 
     @Test

@@ -15,7 +15,7 @@ import java.time.format.DateTimeFormatter;
 @Service
 @Slf4j
 public class HelloServices {
-    public Response processRequest(RequestDto request) {
+    public ResponseDto processRequest(RequestDto request) {
 
         ResponseDto response = new ResponseDto();
 
@@ -34,7 +34,7 @@ public class HelloServices {
 
         fillHeadersInfo(response);
 
-        return Response.ok(response).build();
+        return response;
     }
 
     /**
