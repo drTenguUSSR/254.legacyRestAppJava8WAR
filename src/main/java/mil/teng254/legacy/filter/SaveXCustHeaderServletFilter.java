@@ -12,21 +12,23 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.Map;
 
-@WebFilter(filterName = "WebFilterSaveHeaderName", urlPatterns = "/*", asyncSupported = true)
+@WebFilter(filterName = "SaveXCustHeaderServletFilterName", urlPatterns = "/*", asyncSupported = true)
 @Slf4j
 //http-заголовки
 // "X-Cust-Alfa"
 // "X-Cust-Bravo"
 // "X-Cust-Kilo"
-public class WebFilterSaveHeader implements Filter {
+public class SaveXCustHeaderServletFilter implements Filter {
 
+    public static final String CUST_LOG4J_PROP_KILO = "X-Cust-Kilo";
     private static final String CUST_HTTP_HEADER_ALFA = "X-Cust-Alfa";
-
     private static final String CUST_HTTP_HEADER_BRAVO = "X-Cust-Bravo";
     private static final ThreadLocal<String> CUST_BRAVO = new ThreadLocal<>();
-
     private static final String CUST_HTTP_HEADER_KILO = "X-Cust-Kilo";
-    public static final String CUST_LOG4J_PROP_KILO = "X-Cust-Kilo";
+
+    public SaveXCustHeaderServletFilter() {
+        log.debug(".ctor called");
+    }
 
     public static String getBravoData() {
         return CUST_BRAVO.get();
@@ -36,12 +38,7 @@ public class WebFilterSaveHeader implements Filter {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder
                 .currentRequestAttributes())
                 .getRequest();
-        String res = request.getHeader(CUST_HTTP_HEADER_ALFA);
-        return res;
-    }
-
-    public WebFilterSaveHeader() {
-        log.debug(".ctor called");
+        return request.getHeader(CUST_HTTP_HEADER_ALFA);
     }
 
     @Override
@@ -62,7 +59,7 @@ public class WebFilterSaveHeader implements Filter {
     private void putHeader(ServletRequest servletRequest) {
         HttpServletRequest req = (HttpServletRequest) servletRequest;
         String custB = req.getHeader(CUST_HTTP_HEADER_BRAVO);
-        log.debug("putHeader: custB=!{}!",custB);
+        log.debug("putHeader: custB=!{}!", custB);
         if (StringUtils.hasText(custB)) {
             CUST_BRAVO.set(custB);
         }

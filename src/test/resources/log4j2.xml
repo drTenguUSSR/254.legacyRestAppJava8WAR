@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--src/test/resources/log4j2.xml-->
 <Configuration status="WARN" xmlns="http://logging.apache.org/log4j/2.0/config">
     <Properties>
         <Property name="log-pattern">%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n</Property>

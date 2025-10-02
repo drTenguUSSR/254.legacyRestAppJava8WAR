@@ -3,11 +3,10 @@ package mil.teng254.legacy.services;
 import lombok.extern.slf4j.Slf4j;
 import mil.teng254.legacy.dto.RequestDto;
 import mil.teng254.legacy.dto.ResponseDto;
-import mil.teng254.legacy.filter.WebFilterSaveHeader;
+import mil.teng254.legacy.filter.SaveXCustHeaderServletFilter;
 import org.apache.logging.log4j.ThreadContext;
 import org.springframework.stereotype.Service;
 
-import javax.ws.rs.core.Response;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -42,9 +41,9 @@ public class HelloServices {
      * @param response
      */
     private void fillHeadersInfo(ResponseDto response) {
-        String alfa = WebFilterSaveHeader.getHeaderAlfa();
-        String bravo = WebFilterSaveHeader.getBravoData();
-        String kilo = ThreadContext.get(WebFilterSaveHeader.CUST_LOG4J_PROP_KILO);
+        String alfa = SaveXCustHeaderServletFilter.getHeaderAlfa();
+        String bravo = SaveXCustHeaderServletFilter.getBravoData();
+        String kilo = ThreadContext.get(SaveXCustHeaderServletFilter.CUST_LOG4J_PROP_KILO);
         String result = "alfa=" + alfa + ";bravo=" + bravo + ";kilo=" + kilo + ";";
         log.debug("fillHeadersInfo:{}",result);
         response.setHeadersInfo(result);

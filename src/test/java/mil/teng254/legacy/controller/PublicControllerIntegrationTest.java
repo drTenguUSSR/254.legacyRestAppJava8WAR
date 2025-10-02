@@ -1,13 +1,17 @@
+//src/test/java/mil/teng254/legacy/controller/PublicControllerIntegrationTest.java
 package mil.teng254.legacy.controller;
 
+import com.google.common.base.Strings;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.test.framework.JerseyTest;
 import com.sun.jersey.test.framework.WebAppDescriptor;
 import com.sun.jersey.test.framework.spi.container.TestContainerFactory;
 import com.sun.jersey.test.framework.spi.container.grizzly.web.GrizzlyWebTestContainerFactory;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import mil.teng254.legacy.filter.WebFilterSaveHeader;
+import mil.teng254.legacy.filter.SaveXCustHeaderServletFilter;
+import mil.teng254.legacy.services.ServiceRequestUpdater;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -26,7 +30,9 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.RequestContextListener;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.Filter;
 import javax.servlet.ServletContext;
+import javax.servlet.annotation.WebFilter;
 import javax.ws.rs.core.MediaType;
 import java.util.UUID;
 import java.util.regex.Matcher;
@@ -34,16 +40,37 @@ import java.util.regex.Pattern;
 
 //SPECIAL_PORT=1414
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = "file:src/main/webapp/WEB-INF/applicationContext.xml")
+//@ContextConfiguration(locations = "file:src/main/webapp/WEB-INF/applicationContext.xml")
+@ContextConfiguration(locations = "classpath:test-applicationContext.xml")
 @WebAppConfiguration
 @Slf4j
 public class PublicControllerIntegrationTest extends JerseyTest {
 
-    private static final String TEST_ID_ATT ="X-Cust-Att-Holder";
-//    @Autowired
-//    private ApplicationContext applicationContext;
-@Autowired
-private WebApplicationContext applicationContext;
+    private static final String TEST_ID_ATT = "X-Cust-Att-Holder";
+
+    //private ApplicationContext applicationContext;
+    @Autowired
+    private WebApplicationContext applicationContext;
+
+    private static String getTestId() {
+        ServletRequestAttributes ra = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        String testId = (String) ra.getRequest().getAttribute(TEST_ID_ATT);
+        Assert.assertNotNull(testId);
+        return testId;
+    }
+
+    private static String getFilterName(@NonNull Class<? extends Filter> filterClass) {
+        if (filterClass.isAnnotationPresent(WebFilter.class)) {
+            WebFilter webFilterAnnotation = filterClass.getAnnotation(WebFilter.class);
+            String filterName = webFilterAnnotation.filterName();
+            if (Strings.isNullOrEmpty(filterName)) {
+                throw new IllegalArgumentException("filter " + filterClass.getCanonicalName() + " must have a name");
+            }
+            return filterName;
+        } else {
+            throw new IllegalArgumentException("class " + filterClass.getCanonicalName() + " must have a @WebFilter");
+        }
+    }
 
     @Override
     protected TestContainerFactory getTestContainerFactory() {
@@ -60,10 +87,10 @@ private WebApplicationContext applicationContext;
                 .contextParam("contextConfigLocation", "classpath:test-applicationContext.xml")
                 .contextListenerClass(org.springframework.web.context.ContextLoaderListener.class)
                 .servletClass(com.sun.jersey.spi.spring.container.servlet.SpringServlet.class)
-                .addFilter(WebFilterSaveHeader.class, "webFilterSaveHeader")
+                .addFilter(SaveXCustHeaderServletFilter.class, getFilterName(SaveXCustHeaderServletFilter.class))
                 .initParam("com.sun.jersey.config.property.packages",
                         "mil.teng254.legacy.controller"
-                        +";mil.teng254.legacy.filter"
+                                + ";mil.teng254.legacy.filter"
                 )
                 .initParam("com.sun.jersey.api.json.POJOMappingFeature", "false")
                 .build();
@@ -83,22 +110,15 @@ private WebApplicationContext applicationContext;
         //request.setRequestURI("/api/publicERR/hello-rest");
         //request.setContentType(MediaType.APPLICATION_JSON);
         String testId = UUID.randomUUID().toString();
-        log.debug("setUp. testId={}",testId);
+        log.debug("setUp. testId={}", testId);
         request.setAttribute(TEST_ID_ATT, testId);
 
         // Привязываем атрибуты запроса к текущему потоку
         ServletRequestAttributes requestAttributes = new ServletRequestAttributes(request, response);
         RequestContextHolder.setRequestAttributes(requestAttributes);
-        StaticHolder.set(testId,requestAttributes);
+        StaticHolder.set(testId, requestAttributes);
 
         log.debug("RequestContext установлен для текущего потока");
-    }
-
-    private static String getTestId() {
-        ServletRequestAttributes ra = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-        String testId = (String) ra.getRequest().getAttribute(TEST_ID_ATT);
-        Assert.assertNotNull(testId);
-        return testId;
     }
 
     @After
@@ -106,7 +126,7 @@ private WebApplicationContext applicationContext;
     public void tearDown() throws Exception {
         // Очищаем контекст запроса после теста
         String testId = getTestId();
-        log.debug("tearDown: for testId={}",testId);
+        log.debug("tearDown: for testId={}", testId);
         StaticHolder.remove(testId);
         RequestContextHolder.resetRequestAttributes();
         super.tearDown();
@@ -138,12 +158,12 @@ private WebApplicationContext applicationContext;
 
     @Test
     public void validPostHelloRest_min() {
-        log.debug("validPostHelloRest_min. testId={}",getTestId());
+        log.debug("validPostHelloRest_min. testId={}", getTestId());
         WebResource webResource = resource().path("/public/hello-rest");
 
         String srcData = "{\"key\": 100, \"stamp\":\"2025-06-20T11:24:36Z\"}";
         ClientResponse response = webResource
-                .header(StaticHolder.HTTP_HEADER_TEST_ID,getTestId())
+                .header(StaticHolder.HTTP_HEADER_TEST_ID, getTestId())
                 .accept(MediaType.APPLICATION_JSON)
                 .type(MediaType.APPLICATION_JSON)
                 .post(ClientResponse.class, srcData);
@@ -158,15 +178,15 @@ private WebApplicationContext applicationContext;
 
     @Test
     public void validPostHelloRestMultiHeader() {
-        log.debug("validPostHelloRestMultiHeader. testId={}",getTestId());
+        log.debug("validPostHelloRestMultiHeader. testId={}", getTestId());
         WebResource webResource = resource().path("/public/hello-rest");
 
         String srcData = "{\"key\": 150, \"stamp\":\"2025-06-20T11:24:36Z\"}";
         ClientResponse response = webResource
-                .header(StaticHolder.HTTP_HEADER_TEST_ID,getTestId())
-                .header("X-Cust-Alfa","AA01")
-                .header("X-Cust-Bravo","BB02")
-                .header("X-Cust-Kilo","KK03")
+                .header(StaticHolder.HTTP_HEADER_TEST_ID, getTestId())
+                .header("X-Cust-Alfa", "AA01")
+                .header("X-Cust-Bravo", "BB02")
+                .header("X-Cust-Kilo", "KK03")
                 .accept(MediaType.APPLICATION_JSON)
                 .type(MediaType.APPLICATION_JSON)
                 .post(ClientResponse.class, srcData);
@@ -207,9 +227,10 @@ private WebApplicationContext applicationContext;
         Pattern pattern = Pattern.compile(regExp);
         Matcher matcher = pattern.matcher(htmlResponse);
         Assert.assertTrue("Response should contain a date string."
-                +"pat=[" + regExp + "] text=[\n"+htmlResponse+"\n]", matcher.find());
+                + "pat=[" + regExp + "] text=[\n" + htmlResponse + "\n]", matcher.find());
     }
-//===================================
+
+    //===================================
     @Test
     public void testMockServletContextAndRequestContext() {
         log.info("=== Начало диагностики MockServletContext и RequestContext ===");
@@ -229,7 +250,7 @@ private WebApplicationContext applicationContext;
             log.info("✅ ServletContext: {}", servletContext);
 
             // 4. Проверяем, что это MockServletContext
-            log.info("servletContext.class={}",servletContext.getClass().getCanonicalName());
+            log.info("servletContext.class={}", servletContext.getClass().getCanonicalName());
             if (servletContext instanceof MockServletContext) {
                 log.info("✅ ServletContext является MockServletContext");
 
@@ -261,20 +282,38 @@ private WebApplicationContext applicationContext;
         }
 
         // 7. Проверяем бины из контекста
-        try {
-            ServletContext beanServletContext = applicationContext.getBean(ServletContext.class);
-            log.info("✅ Бин ServletContext из контекста: {}", beanServletContext);
-        } catch (Exception e) {
-            log.warn("❌ Не удалось получить бин ServletContext: {}", e.getMessage());
-        }
-
-        try {
-            RequestContextListener listener = applicationContext.getBean(RequestContextListener.class);
-            log.info("✅ Бин RequestContextListener из контекста: {}", listener);
-        } catch (Exception e) {
-            log.warn("❌ Не удалось получить бин RequestContextListener: {}", e.getMessage());
-        }
-
+        checkBeanByClass(null, ServletContext.class);
+        checkBeanByClass("requestContextListener", RequestContextListener.class);
+        checkBeanByClass(null, ServiceRequestUpdater.class);
         log.info("=== Завершение диагностики ===");
+    }
+
+    private void checkBeanByClass(String beanName, Class<?> clazz) {
+        Exception eClass;
+
+        try {
+            Object bean = applicationContext.getBean(clazz);
+            log.info("✅ Бин {} из контекста-по-классу: {}", clazz.getCanonicalName(), bean);
+            return;
+        } catch (Exception e) {
+            eClass = e;
+        }
+
+        if (beanName == null) {
+            log.warn("❌ Не удалось получить бин-по-классу {}: {}", clazz.getCanonicalName(), eClass.getMessage());
+            eClass.printStackTrace();
+            return;
+        }
+
+        try {
+            Object bean = applicationContext.getBean(beanName);
+            log.info("✅ Бин {} из контекста-по-имени: {}", beanName, bean);
+        } catch (Exception e) {
+            log.warn("❌ Не удалось получить бин-по-классу {}: {}", clazz.getCanonicalName(), eClass.getMessage());
+            eClass.printStackTrace();
+            log.warn("❌ Не удалось получить бин-по-имени {}: {}", beanName, e.getMessage());
+            e.printStackTrace();
+        }
+
     }
 }
