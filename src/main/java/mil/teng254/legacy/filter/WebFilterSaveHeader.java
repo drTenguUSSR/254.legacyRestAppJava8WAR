@@ -40,6 +40,10 @@ public class WebFilterSaveHeader implements Filter {
         return res;
     }
 
+    public WebFilterSaveHeader() {
+        log.debug(".ctor called");
+    }
+
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
         log.debug("init called");

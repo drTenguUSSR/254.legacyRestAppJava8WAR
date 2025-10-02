@@ -7,6 +7,7 @@ import com.sun.jersey.test.framework.WebAppDescriptor;
 import com.sun.jersey.test.framework.spi.container.TestContainerFactory;
 import com.sun.jersey.test.framework.spi.container.grizzly.web.GrizzlyWebTestContainerFactory;
 import lombok.extern.slf4j.Slf4j;
+import mil.teng254.legacy.filter.WebFilterSaveHeader;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -46,6 +47,9 @@ private WebApplicationContext applicationContext;
 
     @Override
     protected TestContainerFactory getTestContainerFactory() {
+        //https://eclipse-ee4j.github.io/jersey.github.io/documentation/latest31x/test-framework.html
+        //GrizzlyWebTestContainerFactory - поддерживает сервлеты
+        //GrizzlyTestContainerFactory - облегченный HTTP-контейнер
         return new GrizzlyWebTestContainerFactory();
     }
 
@@ -56,7 +60,11 @@ private WebApplicationContext applicationContext;
                 .contextParam("contextConfigLocation", "classpath:test-applicationContext.xml")
                 .contextListenerClass(org.springframework.web.context.ContextLoaderListener.class)
                 .servletClass(com.sun.jersey.spi.spring.container.servlet.SpringServlet.class)
-                .initParam("com.sun.jersey.config.property.packages", "mil.teng254.legacy.controller")
+                .addFilter(WebFilterSaveHeader.class, "webFilterSaveHeader")
+                .initParam("com.sun.jersey.config.property.packages",
+                        "mil.teng254.legacy.controller"
+                        +";mil.teng254.legacy.filter"
+                )
                 .initParam("com.sun.jersey.api.json.POJOMappingFeature", "false")
                 .build();
     }
@@ -150,7 +158,7 @@ private WebApplicationContext applicationContext;
 
     @Test
     public void validPostHelloRestMultiHeader() {
-        log.debug("validPostHelloRest_min. testId={}",getTestId());
+        log.debug("validPostHelloRestMultiHeader. testId={}",getTestId());
         WebResource webResource = resource().path("/public/hello-rest");
 
         String srcData = "{\"key\": 150, \"stamp\":\"2025-06-20T11:24:36Z\"}";
