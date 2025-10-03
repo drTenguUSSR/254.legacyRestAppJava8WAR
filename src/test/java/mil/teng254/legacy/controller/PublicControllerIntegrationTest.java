@@ -34,6 +34,8 @@ import javax.servlet.Filter;
 import javax.servlet.ServletContext;
 import javax.servlet.annotation.WebFilter;
 import javax.ws.rs.core.MediaType;
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -151,7 +153,7 @@ public class PublicControllerIntegrationTest extends JerseyTest {
                 contentType != null && contentType.contains(MediaType.APPLICATION_JSON));
 
         //проверка Dto
-        PublicDtos.ResponseDto data = response.getEntity(PublicDtos.ResponseDto.class);
+        PublicDtos.ResponseCommon data = response.getEntity(PublicDtos.ResponseCommon.class);
         log.debug("data={}", data);
         Assert.assertEquals("2023-11-30T20:45:59.192345678Z", data.getReport());
     }
@@ -170,7 +172,7 @@ public class PublicControllerIntegrationTest extends JerseyTest {
 
         // статус
         Assert.assertEquals(200, response.getStatus());
-        PublicDtos.ResponseDto respData = response.getEntity(PublicDtos.ResponseDto.class);
+        PublicDtos.ResponseCommon respData = response.getEntity(PublicDtos.ResponseCommon.class);
         Assert.assertEquals(Long.valueOf(101), respData.getRes());
         Assert.assertEquals("2025-06-20T12:24:36Z", respData.getStamp());
         Assert.assertEquals("+03:00", respData.getTz());
@@ -192,11 +194,65 @@ public class PublicControllerIntegrationTest extends JerseyTest {
                 .post(ClientResponse.class, srcData);
         // статус
         Assert.assertEquals(200, response.getStatus());
-        PublicDtos.ResponseDto respData = response.getEntity(PublicDtos.ResponseDto.class);
+        PublicDtos.ResponseCommon respData = response.getEntity(PublicDtos.ResponseCommon.class);
         Assert.assertEquals(Long.valueOf(151), respData.getRes());
         Assert.assertEquals("alfa=AA01;bravo=BB02;kilo=KK03;", respData.getHeadersInfo());
     }
 
+    @Test
+    public void validPostHelloRus() {
+        log.debug("validPostHelloRus. testId={}", getTestId());
+        WebResource webResource = resource().path("/public/hello-rus");
+
+        String srcMsg = "внезапно-" + UUID.randomUUID().toString();
+        String resMsg = "Результат проверки от "+srcMsg+" отправлен";
+
+        PublicDtos.RequestCommon srcData = new PublicDtos.RequestCommon();
+        srcData.setKey(160L);
+        srcData.setStamp(srcMsg);
+
+        ClientResponse response = webResource
+                .header(StaticHolder.HTTP_HEADER_TEST_ID, getTestId())
+                .accept(MediaType.APPLICATION_JSON)
+                .type(MediaType.APPLICATION_JSON)
+                .post(ClientResponse.class, srcData);
+
+        Assert.assertEquals(200, response.getStatus());
+
+        PublicDtos.ResponseCommon respData = response.getEntity(PublicDtos.ResponseCommon.class);
+        Assert.assertEquals(Long.valueOf(161), respData.getRes());
+        Assert.assertEquals(resMsg,respData.getStamp());
+    }
+
+    @Test
+    public void validPostDayShifter() {
+        final String PREFIX="validPostDayShifter:";
+        log.debug(PREFIX+"testId={}", getTestId());
+        WebResource webResource = resource().path("/public/days-shifter");
+
+        PublicDtos.RequestTimeStamp srcData = new PublicDtos.RequestTimeStamp();
+        String srcUuid = UUID.randomUUID().toString();
+        srcData.setUuid(srcUuid);
+        srcData.setShift(5);
+        srcData.setDayTimestamp("2023-04-27");
+        log.debug(PREFIX+"request={}",srcData);
+
+        ClientResponse response = webResource
+                .header(StaticHolder.HTTP_HEADER_TEST_ID, getTestId())
+                .accept(MediaType.APPLICATION_JSON)
+                .type(MediaType.APPLICATION_JSON)
+                .post(ClientResponse.class, srcData);
+
+        Assert.assertEquals(200, response.getStatus());
+
+        PublicDtos.ResponseTimeStamp respData = response.getEntity(PublicDtos.ResponseTimeStamp.class);
+        Assert.assertEquals(srcUuid,respData.getUuid());
+        Assert.assertEquals("2023-05-02",respData.getDayTimestamp());
+    }
+
+    /**
+     * Проверка spring-контекста
+     */
     @Test
     public void testContext() {
         // Проверяем, что бин "templateEngine" существует
@@ -282,13 +338,18 @@ public class PublicControllerIntegrationTest extends JerseyTest {
         }
 
         // 7. Проверяем бины из контекста
-        checkBeanByClass(null, ServletContext.class);
-        checkBeanByClass("requestContextListener", RequestContextListener.class);
-        checkBeanByClass(null, ServiceRequestUpdater.class);
+        checkBeanExist(null, ServletContext.class);
+        checkBeanExist("requestContextListener", RequestContextListener.class);
+        checkBeanExist(null, ServiceRequestUpdater.class);
         log.info("=== Завершение диагностики ===");
     }
 
-    private void checkBeanByClass(String beanName, Class<?> clazz) {
+    /**
+     * Проверка существования бина. Вначале выполняется поиск по классу. потом по имени (идентификатору)
+     * @param beanName идентификатор бина
+     * @param clazz класс бина
+     */
+    private void checkBeanExist(String beanName, Class<?> clazz) {
         Exception eClass;
 
         try {

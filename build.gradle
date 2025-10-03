@@ -64,6 +64,10 @@ dependencies {
     providedCompile 'javax.xml.bind:jaxb-api:2.3.1'
     providedCompile 'com.sun.xml.bind:jaxb-core:2.3.0.1'
     providedCompile 'com.sun.xml.bind:jaxb-impl:2.3.1'
+
+    //JSON-jackson
+    //implementation 'com.fasterxml.jackson.core:jackson-databind:2.11.2'
+    //implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.11.2'
 }
 
 war {

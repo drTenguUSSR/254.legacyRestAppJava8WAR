@@ -2,6 +2,8 @@ package mil.teng254.legacy.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import mil.teng254.legacy.dto.RequestDto;
+import mil.teng254.legacy.dto.RequestTimeStampDto;
+import mil.teng254.legacy.dto.ResponseTimeStampDto;
 import mil.teng254.legacy.dto.ResponseDto;
 import mil.teng254.legacy.services.HelloServices;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +19,6 @@ import javax.ws.rs.core.Response;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Enumeration;
 
 @Path("/public")
 @Component
@@ -66,17 +67,66 @@ public class PublicController {
         log.info("helloRest. processRequest: dto.key={} remoteAdr={} localPort={} req.Method={} req.URI={}",
                 request.getKey(),
                 httpRequest.getRemoteAddr(), httpRequest.getLocalPort(),
-                httpRequest.getMethod(),httpRequest.getRequestURI());
-        StaticHolder.dumpRequestInfo("param",httpRequest);
-        StaticHolder.overrideRequestAttributes(testId,httpRequest);
+                httpRequest.getMethod(), httpRequest.getRequestURI());
+        StaticHolder.dumpRequestInfo("param", httpRequest);
+        StaticHolder.overrideRequestAttributes(testId, httpRequest);
 
         HttpServletRequest req2 = ((ServletRequestAttributes) RequestContextHolder
                 .currentRequestAttributes())
                 .getRequest();
-        StaticHolder.dumpRequestInfo("inside",req2);
+        StaticHolder.dumpRequestInfo("inside", req2);
 
         //TODO: по окончании обработки запроса, нужно очистить контекст. в идеале - восстановить предыдущий (до override)
         ResponseDto resp = helloServices.processRequest(request);
         return Response.ok(resp).build();
     }
+
+    @POST
+    @Path("/hello-rus")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response helloRus(RequestDto request,
+                             @Context HttpServletRequest httpRequest,
+                             @HeaderParam(StaticHolder.HTTP_HEADER_TEST_ID) String testId
+    ) {
+        log.info("helloRus. processRequest: dto.key={} remoteAdr={} localPort={} req.Method={} req.URI={}",
+                request.getKey(),
+                httpRequest.getRemoteAddr(), httpRequest.getLocalPort(),
+                httpRequest.getMethod(), httpRequest.getRequestURI());
+        StaticHolder.dumpRequestInfo("param", httpRequest);
+        StaticHolder.overrideRequestAttributes(testId, httpRequest);
+
+        HttpServletRequest req2 = ((ServletRequestAttributes) RequestContextHolder
+                .currentRequestAttributes())
+                .getRequest();
+        StaticHolder.dumpRequestInfo("inside", req2);
+
+        //TODO: по окончании обработки запроса, нужно очистить контекст. в идеале - восстановить предыдущий (до override)
+        ResponseDto resp = helloServices.helloRus(request);
+        return Response.ok(resp).build();
+    }
+
+    @POST
+    @Path("/days-shifter")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response helloDayShifter(RequestTimeStampDto request,
+                                    @Context HttpServletRequest httpRequest,
+                                    @HeaderParam(StaticHolder.HTTP_HEADER_TEST_ID) String testId
+    ) {
+        log.info("helloDaysShifter. processRequest: dto.uuid={} localPort={} req.URI={}",
+                request.getUuid(), httpRequest.getLocalPort(), httpRequest.getRequestURI());
+        StaticHolder.dumpRequestInfo("param", httpRequest);
+        StaticHolder.overrideRequestAttributes(testId, httpRequest);
+
+        HttpServletRequest req2 = ((ServletRequestAttributes) RequestContextHolder
+                .currentRequestAttributes())
+                .getRequest();
+        StaticHolder.dumpRequestInfo("inside", req2);
+
+        //TODO: по окончании обработки запроса, нужно очистить контекст. в идеале - восстановить предыдущий (до override)
+        ResponseTimeStampDto resp = helloServices.helloDayShifter(request);
+        return Response.ok(resp).build();
+    }
+
 }
