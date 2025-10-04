@@ -1,11 +1,11 @@
 package mil.teng254.legacy.services;
 
 import lombok.extern.slf4j.Slf4j;
-import mil.teng254.legacy.dto.RequestDto;
+import mil.teng254.legacy.dto.CommonRequestDto;
 import mil.teng254.legacy.dto.RequestTimeStampDto;
-import mil.teng254.legacy.dto.ResponseDto;
+import mil.teng254.legacy.dto.CommonResponseDto;
 import mil.teng254.legacy.dto.ResponseTimeStampDto;
-import mil.teng254.legacy.filter.SaveXCustHeaderServletFilter;
+import mil.teng254.legacy.filter.SaveXCustHeadersServletFilter;
 import org.apache.logging.log4j.ThreadContext;
 import org.springframework.stereotype.Service;
 
@@ -17,8 +17,8 @@ import java.time.format.DateTimeFormatter;
 @Service
 @Slf4j
 public class HelloServices {
-    public ResponseDto processRequest(RequestDto request) {
-        ResponseDto response = new ResponseDto();
+    public CommonResponseDto processRequest(CommonRequestDto request) {
+        CommonResponseDto response = new CommonResponseDto();
         // Инкрементируем key
         response.setRes(request.getKey() + 1);
         // Парсим время, добавляем 1 час и форматируем обратно
@@ -35,19 +35,19 @@ public class HelloServices {
     /**
      * заполнение mil.teng254.legacy.dto.ResponseDto#headersInfo
      *
-     * @param response
+     * @param response заполненный ResponseDto с данными из заголовков
      */
-    private void fillHeadersInfo(ResponseDto response) {
-        String alfa = SaveXCustHeaderServletFilter.getHeaderAlfa();
-        String bravo = SaveXCustHeaderServletFilter.getBravoData();
-        String kilo = ThreadContext.get(SaveXCustHeaderServletFilter.CUST_LOG4J_PROP_KILO);
+    private void fillHeadersInfo(CommonResponseDto response) {
+        String alfa = SaveXCustHeadersServletFilter.getHeaderAlfa();
+        String bravo = SaveXCustHeadersServletFilter.getBravoData();
+        String kilo = ThreadContext.get(SaveXCustHeadersServletFilter.CUST_LOG4J_PROP_KILO);
         String result = "alfa=" + alfa + ";bravo=" + bravo + ";kilo=" + kilo + ";";
         log.debug("fillHeadersInfo:{}", result);
         response.setHeadersInfo(result);
     }
 
-    public ResponseDto helloRus(RequestDto request) {
-        ResponseDto response = new ResponseDto();
+    public CommonResponseDto helloRus(CommonRequestDto request) {
+        CommonResponseDto response = new CommonResponseDto();
         log.debug("helloRus: req=!{}!", request.getStamp());
         String result = "Результат проверки от " + request.getStamp() + " отправлен";
         log.debug("helloRus: result=!{}!", result);

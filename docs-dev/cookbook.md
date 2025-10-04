@@ -4,7 +4,7 @@
 
 Есть приложение:
 - используется Oracle Java 1.8 x64, Spring 5.2.8.Release, Jersey 1.19.4, Gradle 6.8.2 + groovy, JUnit 4.12.
-- исполльзуется Lombok 1.18.20, Google Guava 20.0, Log4j 1.2.14 + xml конфигурация, фасад slf4j
+- используется Lombok 1.18.20, Google Guava 20.0, log4j-api:2.4 + xml конфигурация, фасад slf4j
 - SpringBoot не используется, Spring MVC не используется
 - в `web.xml` параметр `com.sun.jersey.api.json.POJOMappingFeature` выключен (false)
 - сериализация JSON через JAXB
@@ -20,18 +20,30 @@
 - ObjectFactory не применяется;
 - JAXBElement провайдер не применяется (```com.sun.jersey.json.impl.JAXBElementProvider```)
 
-## базовый промпт для тестов
+## Базовый промпт для доработок
 
-Как написать интеграционный тест для rest контролера?
-При этом:
+Описание приложения
+- используется Oracle Java 1.8 x64, Spring 5.2.8.Release, Jersey 1.19.4, Gradle 6.8.2 + groovy, JUnit 4.12.
+- используется Lombok 1.18.20, Google Guava 20.0, Log4j 1.2.14 + xml конфигурация, фасад slf4j
+- используется Lombok 1.18.20, Google Guava 20.0, log4j-api:2.4 + xml конфигурация, фасад slf4j
 - контролер обрабатывает запрос ```http://some.host/api/point```
 - контролер возвращает структуру ```{ "key1":"aaa","key2":42}```
 - для удаленного вызова используется WebResource из Jersey 1.x
 - используется тестовый контейнер (Grizzly)
 - используется  Jersey Test Framework
 - используется jersey-test-framework-grizzly:1.19.4
-- Использовать SpringJUnit4ClassRunner для загрузки Spring контекста
+- тестовый класс аннотирован как @RunWith(SpringJUnit4ClassRunner.class)
+  @ContextConfiguration(locations = "classpath:test-applicationContext.xml")
+  @WebAppConfiguration
 - Создать и запустить Jersey сервер программно, используя Spring контекст.
+
+## Сохраненный контекст от ИИ DeepSeek
+
+Q: сформулирую краткое содержание по применяемым технологиям и принятым решениям, 
+суммирующий текущую переписку с целью применения этой информации как отправной 
+точки для проектирования других доработок с помощью ИИ
+A:
+- [dev2025-10-04.md](dev2025-10-04.md) 
 
 ## Цель применения ```JAXBElement<RequestDto>```
 

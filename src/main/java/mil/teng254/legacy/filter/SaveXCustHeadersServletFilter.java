@@ -1,6 +1,7 @@
 package mil.teng254.legacy.filter;
 
 import lombok.extern.slf4j.Slf4j;
+import mil.teng254.legacy.controller.StaticHolder;
 import org.apache.logging.log4j.ThreadContext;
 import org.springframework.util.StringUtils;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -18,7 +19,7 @@ import java.util.Map;
 // "X-Cust-Alfa"
 // "X-Cust-Bravo"
 // "X-Cust-Kilo"
-public class SaveXCustHeaderServletFilter implements Filter {
+public class SaveXCustHeadersServletFilter implements Filter {
 
     public static final String CUST_LOG4J_PROP_KILO = "X-Cust-Kilo";
     private static final String CUST_HTTP_HEADER_ALFA = "X-Cust-Alfa";
@@ -26,7 +27,7 @@ public class SaveXCustHeaderServletFilter implements Filter {
     private static final ThreadLocal<String> CUST_BRAVO = new ThreadLocal<>();
     private static final String CUST_HTTP_HEADER_KILO = "X-Cust-Kilo";
 
-    public SaveXCustHeaderServletFilter() {
+    public SaveXCustHeadersServletFilter() {
         log.debug(".ctor called");
     }
 
@@ -35,9 +36,10 @@ public class SaveXCustHeaderServletFilter implements Filter {
     }
 
     public static String getHeaderAlfa() {
-        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder
-                .currentRequestAttributes())
-                .getRequest();
+        ServletRequestAttributes atts = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+        log.debug("getHeaderAlfa. atts={}", System.identityHashCode(atts));
+        HttpServletRequest request = atts.getRequest();
+        StaticHolder.dumpRequestInfo("getHeaderAlfa", request);
         return request.getHeader(CUST_HTTP_HEADER_ALFA);
     }
 
@@ -47,7 +49,8 @@ public class SaveXCustHeaderServletFilter implements Filter {
     }
 
     @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
+            throws IOException, ServletException {
         try {
             putHeader(servletRequest);
             filterChain.doFilter(servletRequest, servletResponse);
@@ -59,11 +62,11 @@ public class SaveXCustHeaderServletFilter implements Filter {
     private void putHeader(ServletRequest servletRequest) {
         HttpServletRequest req = (HttpServletRequest) servletRequest;
         String custB = req.getHeader(CUST_HTTP_HEADER_BRAVO);
-        log.debug("putHeader: custB=!{}!", custB);
+        String custK = req.getHeader(CUST_HTTP_HEADER_KILO);
+        log.debug("putHeader: custB=!{}! custK=!{}!", custB, custK);
         if (StringUtils.hasText(custB)) {
             CUST_BRAVO.set(custB);
         }
-        String custK = req.getHeader(CUST_HTTP_HEADER_KILO);
         if (StringUtils.hasText(custK)) {
             //usage ThreadContext.get(CUST_HTTP_HEADER_KILO)
             ThreadContext.put(CUST_LOG4J_PROP_KILO, custK);

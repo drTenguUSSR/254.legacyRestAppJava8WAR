@@ -1,7 +1,7 @@
 package mil.teng254.legacy.controller;
 
-import mil.teng254.legacy.dto.RequestDto;
-import mil.teng254.legacy.dto.ResponseDto;
+import mil.teng254.legacy.dto.CommonRequestDto;
+import mil.teng254.legacy.dto.CommonResponseDto;
 import mil.teng254.legacy.filter.SpecialPort;
 import org.springframework.stereotype.Component;
 
@@ -25,12 +25,12 @@ public class SpecialController {
     @Path("/mark-path")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response markPath(JAXBElement<RequestDto> wrequest) {
-        ResponseDto response = new ResponseDto();
+    public Response markPath(JAXBElement<CommonRequestDto> wrequest) {
+        CommonResponseDto response = new CommonResponseDto();
 
         StringBuilder report = new StringBuilder();
 
-        RequestDto request = wrequest.getValue();
+        CommonRequestDto request = wrequest.getValue();
         if (request.getOptionalField() != null) {
             report.append("OptionalField=[").append(request.getOptionalField()).append("]");
         } else {

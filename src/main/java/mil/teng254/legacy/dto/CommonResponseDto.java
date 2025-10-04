@@ -7,7 +7,7 @@ import java.io.Serializable;
 
 @XmlRootElement
 @Data
-public class ResponseDto implements Serializable {
+public class CommonResponseDto implements Serializable {
     private Long res;
     private String stamp;
     private String tz;

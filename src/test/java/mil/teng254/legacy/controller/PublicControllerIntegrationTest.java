@@ -10,12 +10,10 @@ import com.sun.jersey.test.framework.spi.container.TestContainerFactory;
 import com.sun.jersey.test.framework.spi.container.grizzly.web.GrizzlyWebTestContainerFactory;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import mil.teng254.legacy.filter.SaveXCustHeaderServletFilter;
+import mil.teng254.legacy.filter.SaveXCustHeadersServletFilter;
+import mil.teng254.legacy.filter.test.OverrideRequestAttributesFilter;
 import mil.teng254.legacy.services.ServiceRequestUpdater;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -34,15 +32,12 @@ import javax.servlet.Filter;
 import javax.servlet.ServletContext;
 import javax.servlet.annotation.WebFilter;
 import javax.ws.rs.core.MediaType;
-import java.sql.Timestamp;
-import java.time.Instant;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 //SPECIAL_PORT=1414
 @RunWith(SpringJUnit4ClassRunner.class)
-//@ContextConfiguration(locations = "file:src/main/webapp/WEB-INF/applicationContext.xml")
 @ContextConfiguration(locations = "classpath:test-applicationContext.xml")
 @WebAppConfiguration
 @Slf4j
@@ -50,7 +45,6 @@ public class PublicControllerIntegrationTest extends JerseyTest {
 
     private static final String TEST_ID_ATT = "X-Cust-Att-Holder";
 
-    //private ApplicationContext applicationContext;
     @Autowired
     private WebApplicationContext applicationContext;
 
@@ -74,6 +68,11 @@ public class PublicControllerIntegrationTest extends JerseyTest {
         }
     }
 
+    @AfterClass
+    public static void cleanupAll() {
+        StaticHolder.cleanupAll();
+    }
+
     @Override
     protected TestContainerFactory getTestContainerFactory() {
         //https://eclipse-ee4j.github.io/jersey.github.io/documentation/latest31x/test-framework.html
@@ -89,11 +88,11 @@ public class PublicControllerIntegrationTest extends JerseyTest {
                 .contextParam("contextConfigLocation", "classpath:test-applicationContext.xml")
                 .contextListenerClass(org.springframework.web.context.ContextLoaderListener.class)
                 .servletClass(com.sun.jersey.spi.spring.container.servlet.SpringServlet.class)
-                .addFilter(SaveXCustHeaderServletFilter.class, getFilterName(SaveXCustHeaderServletFilter.class))
-                .initParam("com.sun.jersey.config.property.packages",
-                        "mil.teng254.legacy.controller"
-                                + ";mil.teng254.legacy.filter"
-                )
+                //.addFilter(DiagnosticFilter.class, "diagnosticFilter1")
+                .addFilter(OverrideRequestAttributesFilter.class, "OverrideRequestAttributesFilter")
+                //.addFilter(DiagnosticFilter.class, "diagnosticFilter2")
+                .addFilter(SaveXCustHeadersServletFilter.class, getFilterName(SaveXCustHeadersServletFilter.class))
+                .initParam("com.sun.jersey.config.property.packages", "mil.teng254.legacy.controller")
                 .initParam("com.sun.jersey.api.json.POJOMappingFeature", "false")
                 .build();
     }
@@ -204,8 +203,8 @@ public class PublicControllerIntegrationTest extends JerseyTest {
         log.debug("validPostHelloRus. testId={}", getTestId());
         WebResource webResource = resource().path("/public/hello-rus");
 
-        String srcMsg = "внезапно-" + UUID.randomUUID().toString();
-        String resMsg = "Результат проверки от "+srcMsg+" отправлен";
+        String srcMsg = "внезапно-" + UUID.randomUUID();
+        String resMsg = "Результат проверки от " + srcMsg + " отправлен";
 
         PublicDtos.RequestCommon srcData = new PublicDtos.RequestCommon();
         srcData.setKey(160L);
@@ -221,13 +220,13 @@ public class PublicControllerIntegrationTest extends JerseyTest {
 
         PublicDtos.ResponseCommon respData = response.getEntity(PublicDtos.ResponseCommon.class);
         Assert.assertEquals(Long.valueOf(161), respData.getRes());
-        Assert.assertEquals(resMsg,respData.getStamp());
+        Assert.assertEquals(resMsg, respData.getStamp());
     }
 
     @Test
     public void validPostDayShifter() {
-        final String PREFIX="validPostDayShifter:";
-        log.debug(PREFIX+"testId={}", getTestId());
+        final String PREFIX = "validPostDayShifter:";
+        log.debug(PREFIX + "testId={}", getTestId());
         WebResource webResource = resource().path("/public/days-shifter");
 
         PublicDtos.RequestTimeStamp srcData = new PublicDtos.RequestTimeStamp();
@@ -235,7 +234,7 @@ public class PublicControllerIntegrationTest extends JerseyTest {
         srcData.setUuid(srcUuid);
         srcData.setShift(5);
         srcData.setDayTimestamp("2023-04-27");
-        log.debug(PREFIX+"request={}",srcData);
+        log.debug(PREFIX + "request={}", srcData);
 
         ClientResponse response = webResource
                 .header(StaticHolder.HTTP_HEADER_TEST_ID, getTestId())
@@ -246,8 +245,8 @@ public class PublicControllerIntegrationTest extends JerseyTest {
         Assert.assertEquals(200, response.getStatus());
 
         PublicDtos.ResponseTimeStamp respData = response.getEntity(PublicDtos.ResponseTimeStamp.class);
-        Assert.assertEquals(srcUuid,respData.getUuid());
-        Assert.assertEquals("2023-05-02",respData.getDayTimestamp());
+        Assert.assertEquals(srcUuid, respData.getUuid());
+        Assert.assertEquals("2023-05-02", respData.getDayTimestamp());
     }
 
     /**
@@ -346,8 +345,9 @@ public class PublicControllerIntegrationTest extends JerseyTest {
 
     /**
      * Проверка существования бина. Вначале выполняется поиск по классу. потом по имени (идентификатору)
+     *
      * @param beanName идентификатор бина
-     * @param clazz класс бина
+     * @param clazz    класс бина
      */
     private void checkBeanExist(String beanName, Class<?> clazz) {
         Exception eClass;

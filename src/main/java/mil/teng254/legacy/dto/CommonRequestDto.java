@@ -10,13 +10,13 @@ import java.io.Serializable;
 @XmlType(name = "RequestDto", propOrder = {
         "key", "stamp", "optionalField", "choiceField"
 })
-public class RequestDto implements Serializable {
+public class CommonRequestDto implements Serializable {
     private Long key;
     private String stamp;
     private String optionalField;
     private Object choiceField;
 
-    public RequestDto() {
+    public CommonRequestDto() {
     }
 
     // Геттеры и сеттеры

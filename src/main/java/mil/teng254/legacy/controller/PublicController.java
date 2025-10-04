@@ -1,15 +1,13 @@
 package mil.teng254.legacy.controller;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import mil.teng254.legacy.dto.RequestDto;
+import mil.teng254.legacy.dto.CommonRequestDto;
 import mil.teng254.legacy.dto.RequestTimeStampDto;
+import mil.teng254.legacy.dto.CommonResponseDto;
 import mil.teng254.legacy.dto.ResponseTimeStampDto;
-import mil.teng254.legacy.dto.ResponseDto;
 import mil.teng254.legacy.services.HelloServices;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
@@ -23,13 +21,9 @@ import java.time.format.DateTimeFormatter;
 @Path("/public")
 @Component
 @Slf4j
+@RequiredArgsConstructor
 public class PublicController {
-
-    @Context
-    private HttpServletRequest httpRequest;
-
-    @Autowired
-    private HelloServices helloServices;
+    private final HelloServices helloServices;
 
     @GET
     @Path("/time")
@@ -37,7 +31,7 @@ public class PublicController {
     public Response getLocalDtm() {
         ZonedDateTime dtm = ZonedDateTime.now();
         String dtmStamp = dtm.format(DateTimeFormatter.ISO_INSTANT);
-        ResponseDto resp = new ResponseDto();
+        CommonResponseDto resp = new CommonResponseDto();
         resp.setStamp(dtmStamp);
 
         ZoneId zoneId = ZoneId.of("UTC+3");
@@ -51,8 +45,8 @@ public class PublicController {
     @Path("/hello-path")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response helloPath(RequestDto request) {
-        ResponseDto resp = helloServices.processRequest(request);
+    public Response helloPath(CommonRequestDto request) {
+        CommonResponseDto resp = helloServices.processRequest(request);
         return Response.ok(resp).build();
     }
 
@@ -60,24 +54,11 @@ public class PublicController {
     @Path("/hello-rest")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response helloRest(RequestDto request,
-                              @Context HttpServletRequest httpRequest,
-                              @HeaderParam(StaticHolder.HTTP_HEADER_TEST_ID) String testId
-    ) {
-        log.info("helloRest. processRequest: dto.key={} remoteAdr={} localPort={} req.Method={} req.URI={}",
-                request.getKey(),
-                httpRequest.getRemoteAddr(), httpRequest.getLocalPort(),
-                httpRequest.getMethod(), httpRequest.getRequestURI());
-        StaticHolder.dumpRequestInfo("param", httpRequest);
-        StaticHolder.overrideRequestAttributes(testId, httpRequest);
-
-        HttpServletRequest req2 = ((ServletRequestAttributes) RequestContextHolder
-                .currentRequestAttributes())
-                .getRequest();
-        StaticHolder.dumpRequestInfo("inside", req2);
-
-        //TODO: по окончании обработки запроса, нужно очистить контекст. в идеале - восстановить предыдущий (до override)
-        ResponseDto resp = helloServices.processRequest(request);
+    public Response helloRest(CommonRequestDto request, @Context HttpServletRequest httpRequest) {
+        log.info("helloRest. processRequest: thId={} dto.key={} localPort={} req.URI={}",
+                Thread.currentThread().getId(), request.getKey(), httpRequest.getLocalPort(),
+                httpRequest.getRequestURI());
+        CommonResponseDto resp = helloServices.processRequest(request);
         return Response.ok(resp).build();
     }
 
@@ -85,7 +66,7 @@ public class PublicController {
     @Path("/hello-rus")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response helloRus(RequestDto request,
+    public Response helloRus(CommonRequestDto request,
                              @Context HttpServletRequest httpRequest,
                              @HeaderParam(StaticHolder.HTTP_HEADER_TEST_ID) String testId
     ) {
@@ -93,16 +74,7 @@ public class PublicController {
                 request.getKey(),
                 httpRequest.getRemoteAddr(), httpRequest.getLocalPort(),
                 httpRequest.getMethod(), httpRequest.getRequestURI());
-        StaticHolder.dumpRequestInfo("param", httpRequest);
-        StaticHolder.overrideRequestAttributes(testId, httpRequest);
-
-        HttpServletRequest req2 = ((ServletRequestAttributes) RequestContextHolder
-                .currentRequestAttributes())
-                .getRequest();
-        StaticHolder.dumpRequestInfo("inside", req2);
-
-        //TODO: по окончании обработки запроса, нужно очистить контекст. в идеале - восстановить предыдущий (до override)
-        ResponseDto resp = helloServices.helloRus(request);
+        CommonResponseDto resp = helloServices.helloRus(request);
         return Response.ok(resp).build();
     }
 
@@ -116,15 +88,6 @@ public class PublicController {
     ) {
         log.info("helloDaysShifter. processRequest: dto.uuid={} localPort={} req.URI={}",
                 request.getUuid(), httpRequest.getLocalPort(), httpRequest.getRequestURI());
-        StaticHolder.dumpRequestInfo("param", httpRequest);
-        StaticHolder.overrideRequestAttributes(testId, httpRequest);
-
-        HttpServletRequest req2 = ((ServletRequestAttributes) RequestContextHolder
-                .currentRequestAttributes())
-                .getRequest();
-        StaticHolder.dumpRequestInfo("inside", req2);
-
-        //TODO: по окончании обработки запроса, нужно очистить контекст. в идеале - восстановить предыдущий (до override)
         ResponseTimeStampDto resp = helloServices.helloDayShifter(request);
         return Response.ok(resp).build();
     }

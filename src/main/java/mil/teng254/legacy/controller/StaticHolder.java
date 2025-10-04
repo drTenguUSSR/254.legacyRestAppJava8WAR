@@ -10,6 +10,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.core.MultivaluedMap;
 import java.util.Enumeration;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -40,23 +41,40 @@ public class StaticHolder {
         HttpServletRequest xreq = attrs.getRequest();
         Enumeration<String> pHttpHeaders = pHttpRequest.getHeaderNames();
         ServiceRequestUpdater wrkUpdater = SpringContextHolder.getBean("serviceRequestUpdater", ServiceRequestUpdater.class);
-        dumpRequestInfo("xreq-before", xreq);
         wrkUpdater.doUpdate(xreq, pHttpRequest);
-        dumpRequestInfo("xreq-after", xreq);
         RequestContextHolder.setRequestAttributes(attrs);
     }
+
+    public static void overrideRequestAttributes(String testId, MultivaluedMap<String, String> pHeaders) {
+        if (Strings.isNullOrEmpty(testId)) {
+            return;
+        }
+        ServletRequestAttributes attrs = (ServletRequestAttributes) raHolder.get(testId);
+        Assert.notNull(attrs, "not found ra for testId=[" + testId + "]");
+        HttpServletRequest xreq = attrs.getRequest();
+        ServiceRequestUpdater wrkUpdater = SpringContextHolder.getBean("serviceRequestUpdater", ServiceRequestUpdater.class);
+        wrkUpdater.doUpdate(xreq, pHeaders);
+        RequestContextHolder.setRequestAttributes(attrs);
+    }
+
 
     public static void dumpRequestInfo(String prefix, HttpServletRequest httpRequest) {
         Enumeration<String> headersEnum = httpRequest.getHeaderNames();
         if (headersEnum == null) {
-            log.debug("info-headers-{} is null", prefix);
+            log.debug("info-headers-!{}! is null", prefix);
         } else {
-            log.debug("info-headers-{}=[", prefix);
+            log.debug("info-headers-!{}!=[", prefix);
             while (headersEnum.hasMoreElements()) {
                 String key = headersEnum.nextElement();
                 log.debug("- [{}] -> [{}]", key, httpRequest.getHeader(key));
             }
             log.debug("]");
         }
+    }
+
+    public static void cleanupAll() {
+        int size = raHolder.size();
+        raHolder.clear();
+        log.debug("StaticHolder: Cleaned up all {} contexts", size);
     }
 }

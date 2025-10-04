@@ -21,15 +21,18 @@ Demo. Приложение на Java 8 для разворачивания на 
 - сериализация JSON через JAXB
 - результат сборки - ROOT.war
 
-[//]: # ([Технические подробности]&#40;docs-dev/tech-notes.md&#41;)
+[Технические подробности](docs-dev/tech-notes.md)
 
 ## M25903. Получение Http-заголовков вне контекста контролера. Работает 2-из-3
 
-- Способ №1. alfa. рабочий. получение через ```RequestContextHolder```. для работы обязательно нужно устанавливать 
-в потоке, где выполняется контролер с помощью ```RequestContextHolder.setRequestAttributes```
-- Способ №2. bravo. рабочий. получение через ```javax.servlet.Filter```. извлечение - ```ThreadLocal<String>```.
-  ```RequestContextHolder``` не используется
-- Способ №3. kilo. рабочий. получение через ```javax.servlet.Filter```. извлечение - ```org.apache.logging.log4j.ThreadContext```.
+- Способ №1. alfa. рабочий. получение через ```RequestContextHolder```. для работы
+ обязательно нужно устанавливать в потоке, где выполняется контролер с помощью
+ ```RequestContextHolder.setRequestAttributes```
+- Способ №2. bravo. рабочий. получение через ```javax.servlet.Filter```.
+ извлечение - ```ThreadLocal<String>```.
+ ```RequestContextHolder``` не используется
+- Способ №3. kilo. рабочий. получение через ```javax.servlet.Filter```.
+ извлечение - ```org.apache.logging.log4j.ThreadContext```.
 ```RequestContextHolder``` не используется
 
 ## M25902. thymeleaf и интеграционные тесты
