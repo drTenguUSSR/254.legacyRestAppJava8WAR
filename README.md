@@ -31,12 +31,12 @@ Demo. Приложение на Java 8 для разворачивания на 
 - логирование порта сервера, куда пришел запрос
 - получение http-заголовков, если код, в котором он нужен,
   не может получить заголовок как параметр метода (три варианта - alfa, bravo, kilo):
-    - alfa - использует RequestContextHolder.currentRequestAttributes
-    - bravo - использует ThreadLocal
-    - kilo - использует ThreadContext
+  - alfa - использует RequestContextHolder.currentRequestAttributes
+  - bravo - использует ThreadLocal
+  - kilo - использует ThreadContext
 - интеграционный тест на все три (alfa, bravo, kilo) способа передачи HTTP-заголовков
-- работа теста с LocalDate. передача в виде строки, парсинг в JAXB из произвольного формата
-  в LocalDate ; возврат в виде строки
+- работа теста с LocalDate. передача в виде строки, парсинг в JAXB из произвольного
+ формата в LocalDate ; возврат в виде строки
 
 ## M25903. Получение Http-заголовков вне контекста контролера. Работает 2-из-3
 

@@ -32,6 +32,31 @@
             <AppenderRef ref="FileAppender"/>
         </Logger>
 
+        <Logger name="org.springframework.web" level="DEBUG" additivity="false">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="FileAppender"/>
+        </Logger>
+
+        <!-- jaxb -->
+        <Logger name="org.eclipse.persistence" level="DEBUG" additivity="false">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="FileAppender"/>
+        </Logger>
+        <Logger name="com.sun.jersey" level="DEBUG" additivity="false">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="FileAppender"/>
+        </Logger>
+        <Logger name="org.glassfish.jersey" level="DEBUG" additivity="false">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="FileAppender"/>
+        </Logger>
+        <!-- jaxb -->
+
+        <Logger name="org.springframework.security" level="DEBUG" additivity="false">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="FileAppender"/>
+        </Logger>
+
         <!-- Корневой логгер -->
         <Root level="DEBUG">
             <AppenderRef ref="Console"/>

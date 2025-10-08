@@ -3,8 +3,8 @@ package mil.teng254.legacy.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import mil.teng254.legacy.dto.CommonRequestDto;
-import mil.teng254.legacy.dto.RequestTimeStampDto;
 import mil.teng254.legacy.dto.CommonResponseDto;
+import mil.teng254.legacy.dto.RequestTimeStampDto;
 import mil.teng254.legacy.dto.ResponseTimeStampDto;
 import mil.teng254.legacy.services.HelloServices;
 import org.springframework.stereotype.Component;
@@ -14,6 +14,11 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.ext.MessageBodyReader;
+import javax.ws.rs.ext.Providers;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import java.lang.annotation.Annotation;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -24,6 +29,8 @@ import java.time.format.DateTimeFormatter;
 @RequiredArgsConstructor
 public class PublicController {
     private final HelloServices helloServices;
+    @Context
+    Providers providers;
 
     @GET
     @Path("/time")
@@ -39,6 +46,48 @@ public class PublicController {
         String zdtStamp = zdt.format(DateTimeFormatter.ISO_INSTANT);
         resp.setReport(zdtStamp);
         return Response.ok(resp).build();
+    }
+
+    //http://localhost:8081/api/public/tech-info
+
+    /**
+     * --- default:
+     * JAXBContext provider: [null]
+     * JAXBContext class: [com.sun.xml.internal.bind.v2.runtime.JAXBContextImpl]
+     * ur.class=com.sun.jersey.json.impl.provider.entity.JSONRootElementProvider.App
+     * --- target
+     * JAXBContext provider: [null]
+     * JAXBContext class: [com.sun.xml.bind.v2.runtime.JAXBContextImpl]
+     * ur.class=com.sun.jersey.json.impl.provider.entity.JSONRootElementProvider.App
+     *
+     * @return
+     * @throws JAXBException
+     */
+
+    @GET
+    @Path("/tech-info")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getTechInfo() throws JAXBException {
+        StringBuilder report = new StringBuilder();
+
+        //javax.xml.bind.JAXBContextFactory - Если значение null или оно отсутствует, используется провайдер по умолчанию.
+        report.append("\nJAXBContext provider: [").append(System.getProperty("javax.xml.bind.JAXBContextFactory")).append("]");
+        JAXBContext context = JAXBContext.newInstance(CommonRequestDto.class);
+        report.append("\nJAXBContext class: [").append(context.getClass().getName()).append("]");
+
+        /**
+         * Ожидаемые имена классов в зависимости от провайдера:
+         * Jackson: Классы из пакетов org.codehaus.jackson.jaxrs или com.fasterxml.jackson.jaxrs.json
+         * Jettison: Классы из пакета com.sun.jersey.json.impl
+         * MOXy: Классы из пакета org.eclipse.persistence.jpa.rs.util
+         */
+        MessageBodyReader<CommonRequestDto> ur = providers.getMessageBodyReader(CommonRequestDto.class,
+                CommonRequestDto.class, new Annotation[0], MediaType.APPLICATION_JSON_TYPE);
+        report.append("\nMessageBodyReader ur.class=").append(ur.getClass().getCanonicalName());
+
+        String res = report.toString();
+        log.debug("getTechInfo:{}", res);
+        return Response.ok(res).build();
     }
 
     @POST

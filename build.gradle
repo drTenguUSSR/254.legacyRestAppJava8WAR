@@ -68,6 +68,17 @@ dependencies {
     //JSON-jackson
     //implementation 'com.fasterxml.jackson.core:jackson-databind:2.11.2'
     //implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.11.2'
+    //implementation 'com.fasterxml.jackson.core:jackson-annotations:2.11.2'
+
+    //other
+    // implementation 'org.bouncycastle:bcprov-jdk15on:1.70'
+    // implementation 'com.sun.grizzly:grizzly-framework:1.9.45'
+    // implementation 'com.sun.grizzly:grizzly-servlet-webserver:1.9.45'
+    // implementation 'org.codehaus.jackson:jackson-mapper-lgpl:1.9.13'
+    // implementation 'org.codehaus.jackson:jackson-core-asl:1.9.13'
+    // implementation 'org.codehaus.jackson:jackson-mapper-asl:1.9.13'
+    // implementation 'org.apache.httpcomponents:httpcore:4.5.5'
+    // implementation 'org.apache.httpcomponents:httpclient:4.5.5'
 }
 
 war {

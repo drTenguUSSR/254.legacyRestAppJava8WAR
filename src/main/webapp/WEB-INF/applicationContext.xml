@@ -8,6 +8,7 @@
                            http://www.springframework.org/schema/context/spring-context.xsd">
 
     <context:component-scan base-package="mil.teng254.legacy"/>
+    <context:property-placeholder location="classpath:app.properties"/>
 
     <bean id="serviceRequestUpdater" class="mil.teng254.legacy.services.ServiceRequestUpdaterImpl" />
 
