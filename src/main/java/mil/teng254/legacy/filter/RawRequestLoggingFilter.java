@@ -4,20 +4,19 @@ import com.google.common.io.ByteStreams;
 import com.sun.jersey.spi.container.ContainerRequest;
 import com.sun.jersey.spi.container.ContainerRequestFilter;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.ext.Provider;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 @Provider
-//@Slf4j
+@Slf4j
 public class RawRequestLoggingFilter implements ContainerRequestFilter {
-    private static final Logger log = LoggerFactory.getLogger(RawRequestLoggingFilter.class);
+
     public RawRequestLoggingFilter() {
-        log.error(".ctor");
+        log.debug(".ctor");
     }
+
     @Override
     public ContainerRequest filter(ContainerRequest request) {
         if (request.getHeaderValue("Content-Type") != null &&
@@ -29,7 +28,8 @@ public class RawRequestLoggingFilter implements ContainerRequestFilter {
                 String bodyString = new String(bodyBytes, "UTF-8");
 
                 // Логируем сырой JSON
-                log.debug("==========Raw JSON Request Body: [\n{}\n==========]", bodyString);
+                log.debug("\n==========Raw JSON Request Body: path={} port={} [\n{}\n==========]",
+                        request.getPath(), request.getBaseUri().getPort(), bodyString);
 
                 // Подменяем InputStream запроса на новый, прочитанный из кэша
                 request.setEntityInputStream(new ByteArrayInputStream(bodyBytes));

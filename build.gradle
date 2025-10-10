@@ -27,7 +27,7 @@ dependencies {
     implementation 'com.sun.jersey:jersey-bundle:1.19.4'
     implementation 'com.sun.jersey:jersey-json:1.19.4'
     implementation 'com.sun.jersey.contribs:jersey-spring:1.19.4'
-    
+
     //для доступа к com.sun.jersey.json.impl.provider.entity.JSONJAXBElementProvider
     //implementation 'com.sun.jersey:jersey-json:1.19.4'
 
@@ -81,6 +81,13 @@ dependencies {
     // implementation 'org.apache.httpcomponents:httpclient:4.5.5'
 }
 
+tasks.withType(JavaCompile) {
+    options.deprecation = true
+    options.warnings = true
+    options.compilerArgs << "-Xlint:unchecked"
+}
+
 war {
     archiveFileName = 'ROOT.war'
 }
+

@@ -40,7 +40,25 @@
         <servlet-class>com.sun.jersey.spi.spring.container.servlet.SpringServlet</servlet-class>
         <init-param>
             <param-name>com.sun.jersey.config.property.packages</param-name>
-            <param-value>mil.teng254.legacy</param-value>
+            <param-value>
+                mil.teng254.legacy.controller,
+                mil.teng254.legacy.filter
+            </param-value>
+        </init-param>
+        <!-- Регистрация JAX-RS провайдеров (включая JAXBContentResolver).
+        Запасной вариант, если сканирование не сработало запасной вариант -->
+<!--        <init-param>-->
+<!--            <param-name>com.sun.jersey.config.property.jaxrs.providers</param-name>-->
+<!--            <param-value>-->
+<!--                mil.teng254.legacy.filter.JAXBContentResolver-->
+<!--            </param-value>-->
+<!--        </init-param>-->
+        <init-param>
+            <param-name>com.sun.jersey.spi.container.ContainerRequestFilters</param-name>
+            <param-value>
+                mil.teng254.legacy.filter.RawRequestLoggingFilter,
+                mil.teng254.legacy.filter.SpecialPortFilter
+            </param-value>
         </init-param>
         <init-param>
             <param-name>com.sun.jersey.api.json.POJOMappingFeature</param-name>

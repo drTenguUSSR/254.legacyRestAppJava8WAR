@@ -37,20 +37,16 @@
             <AppenderRef ref="FileAppender"/>
         </Logger>
 
-        <!-- jaxb -->
-        <Logger name="org.eclipse.persistence" level="DEBUG" additivity="false">
-            <AppenderRef ref="Console"/>
-            <AppenderRef ref="FileAppender"/>
-        </Logger>
-        <Logger name="com.sun.jersey" level="DEBUG" additivity="false">
-            <AppenderRef ref="Console"/>
-            <AppenderRef ref="FileAppender"/>
-        </Logger>
-        <Logger name="org.glassfish.jersey" level="DEBUG" additivity="false">
-            <AppenderRef ref="Console"/>
-            <AppenderRef ref="FileAppender"/>
-        </Logger>
-        <!-- jaxb -->
+        <!-- Jersey-diag -->
+<!--        <Logger name="com.sun.jersey" level="TRACE" additivity="false">-->
+<!--            <AppenderRef ref="Console"/>-->
+<!--            <AppenderRef ref="FileAppender"/>-->
+<!--        </Logger>-->
+<!--        <Logger name="org.springframework" level="DEBUG" additivity="false">-->
+<!--            <AppenderRef ref="Console"/>-->
+<!--            <AppenderRef ref="FileAppender"/>-->
+<!--        </Logger>-->
+        <!-- Jersey-diag -->
 
         <Logger name="org.springframework.security" level="DEBUG" additivity="false">
             <AppenderRef ref="Console"/>

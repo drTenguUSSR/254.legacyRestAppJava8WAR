@@ -10,7 +10,6 @@ import com.sun.jersey.test.framework.spi.container.TestContainerFactory;
 import com.sun.jersey.test.framework.spi.container.grizzly.web.GrizzlyWebTestContainerFactory;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import mil.teng254.legacy.filter.DiagnosticFilter;
 import mil.teng254.legacy.filter.SaveXCustHeadersServletFilter;
 import mil.teng254.legacy.filter.test.OverrideRequestAttributesFilter;
 import mil.teng254.legacy.services.ServiceRequestUpdater;
@@ -93,10 +92,16 @@ public class PublicControllerIntegrationTest extends JerseyTest {
                 .addFilter(OverrideRequestAttributesFilter.class, "OverrideRequestAttributesFilter")
                 //.addFilter(DiagnosticFilter.class, "diagnosticFilter2")
                 .addFilter(SaveXCustHeadersServletFilter.class, getFilterName(SaveXCustHeadersServletFilter.class))
-                .initParam("com.sun.jersey.config.property.packages", "mil.teng254.legacy.controller")
-                //.initParam("com.sun.jersey.config.property.packages", "mil.teng254.legacy.controller:mil.teng254.legacy.filter")
+                .initParam("com.sun.jersey.config.property.packages",
+                        "mil.teng254.legacy.controller,"
+                                + "mil.teng254.legacy.filter")
+                // Явная регистрация JAX-RS провайдеров в тестах. Запасной вариант, если сканирование не сработало
+                //.initParam("com.sun.jersey.config.property.jaxrs.providers", "mil.teng254.legacy.filter.JAXBContentResolver")
+                // Регистрация ContainerRequestFilters
+                .initParam("com.sun.jersey.spi.container.ContainerRequestFilters",
+                        "mil.teng254.legacy.filter.RawRequestLoggingFilter," +
+                                "mil.teng254.legacy.filter.SpecialPortFilter")
                 .initParam("com.sun.jersey.api.json.POJOMappingFeature", "false")
-                //.initParam("com.sun.jersey.config.property.jaxrs.providers", "mil.teng254.legacy.filter.RawRequestLoggingFilter")
                 .build();
     }
 
@@ -158,6 +163,29 @@ public class PublicControllerIntegrationTest extends JerseyTest {
         PublicDtos.ResponseCommon data = response.getEntity(PublicDtos.ResponseCommon.class);
         log.debug("data={}", data);
         Assert.assertEquals("2023-11-30T20:45:59.192345678Z", data.getReport());
+    }
+    @Test
+    public void validGetTechJaxbXml() {
+        // Создание запроса к endpoint
+        WebResource webResource = resource().path("/public/tech-jaxb-xml");
+
+        // Выполнение GET запроса
+        ClientResponse response = webResource
+                .accept(MediaType.APPLICATION_JSON)
+                .type(MediaType.APPLICATION_JSON)
+                .get(ClientResponse.class);
+
+        // статус
+        Assert.assertEquals(200, response.getStatus());
+        // проверка Content-Type
+        String contentType = response.getHeaders().getFirst("Content-Type");
+        Assert.assertTrue("Content-Type should be application/json",
+                contentType != null && contentType.contains(MediaType.APPLICATION_JSON));
+
+        //проверка Dto
+        PublicDtos.ResponseCommon data = response.getEntity(PublicDtos.ResponseCommon.class);
+        log.debug("data={}", data.getReport());
+        Assert.assertEquals("JAXBContext class=[com.sun.xml.bind.v2.runtime.JAXBContextImpl]", data.getReport());
     }
 
     @Test

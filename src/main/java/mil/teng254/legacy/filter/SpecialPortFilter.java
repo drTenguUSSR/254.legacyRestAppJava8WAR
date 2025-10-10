@@ -3,10 +3,7 @@ package mil.teng254.legacy.filter;
 import com.sun.jersey.spi.container.ContainerRequest;
 import com.sun.jersey.spi.container.ContainerRequestFilter;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.AnnotationUtils;
-import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.WebApplicationException;
@@ -18,10 +15,8 @@ import java.util.Map;
 import java.util.UUID;
 
 @Provider
-@Component
-//@Slf4j
+@Slf4j
 public class SpecialPortFilter implements ContainerRequestFilter {
-    private static final Logger log = LoggerFactory.getLogger(SpecialPortFilter.class);
     private int specialPort;
     private Map<String, Class<?>> specialControllers = new HashMap<>();
     @Context

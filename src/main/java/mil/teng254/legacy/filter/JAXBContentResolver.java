@@ -18,6 +18,7 @@ import java.util.Set;
 @Slf4j
 @Produces(MediaType.APPLICATION_JSON)
 public class JAXBContentResolver implements ContextResolver<JAXBContext> {
+    private static final String CORRECT_CLASS_NAME="com.sun.xml.bind.v2.runtime.JAXBContextImpl";
     private static final String[] packagesArray = new String[]{"mil.teng254.legacy.dto"};
     private final JAXBContext context;
     private final Set<Class<?>> allClasses;
@@ -34,13 +35,20 @@ public class JAXBContentResolver implements ContextResolver<JAXBContext> {
             for (Class<?> clazz : allClasses) {
                 classesList.add(clazz.getCanonicalName());
             }
-            log.debug(".ctor allClasses: {}", String.join(",", classesList));
+            log.debug(".ctor allClasses:[\n-{}\n]", String.join("\n-", classesList));
         }
         Class<?>[] allClassesArray = allClasses.toArray(new Class<?>[allClasses.size()]);
         context = JAXBContext.newInstance(allClassesArray);
-        log.debug(".ctor JAXBContext-implementation: {}", context.getClass().getName());
+        String contextName = context.getClass().getName();
+
+        if (CORRECT_CLASS_NAME.equals(contextName)) {
+            log.debug(".ctor JAXBContext-implementation correct: {}", contextName);
+        } else {
+            log.debug(".ctor JAXBContext-implementation ERROR: {}, expected {}", contextName,CORRECT_CLASS_NAME);
+        }
     }
 
+    @SuppressWarnings("unchecked")
     private Set<Class<?>> findXmlRootClasses() {
         AnnotationScannerListener scanner = new AnnotationScannerListener(XmlRootElement.class);
         PackageNamesScanner pns = new PackageNamesScanner(packagesArray);

@@ -92,6 +92,18 @@ public class PublicController {
         return Response.ok(res).build();
     }
 
+    @GET
+    @Path("/tech-jaxb-xml")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getTechJaxbXml() throws JAXBException {
+        JAXBContext context = JAXBContext.newInstance(CommonRequestDto.class);
+        String info = "JAXBContext class=[" + context.getClass().getName() + "]";
+        CommonResponseDto resp = new CommonResponseDto();
+        resp.setReport(info);
+        log.debug("getTechJaxbXml:{}", resp);
+        return Response.ok(resp).build();
+    }
+
     @POST
     @Path("/hello-path")
     @Consumes(MediaType.APPLICATION_JSON)
