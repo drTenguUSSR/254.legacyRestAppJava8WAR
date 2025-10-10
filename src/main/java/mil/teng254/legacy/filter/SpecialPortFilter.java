@@ -2,6 +2,7 @@ package mil.teng254.legacy.filter;
 
 import com.sun.jersey.spi.container.ContainerRequest;
 import com.sun.jersey.spi.container.ContainerRequestFilter;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.AnnotationUtils;
@@ -18,8 +19,9 @@ import java.util.UUID;
 
 @Provider
 @Component
+//@Slf4j
 public class SpecialPortFilter implements ContainerRequestFilter {
-    Logger log = LoggerFactory.getLogger(SpecialPortFilter.class);
+    private static final Logger log = LoggerFactory.getLogger(SpecialPortFilter.class);
     private int specialPort;
     private Map<String, Class<?>> specialControllers = new HashMap<>();
     @Context
@@ -47,7 +49,7 @@ public class SpecialPortFilter implements ContainerRequestFilter {
     @Override
     public ContainerRequest filter(ContainerRequest request) {
         String path = request.getPath();
-        log.debug("filter for [{}]", path);
+        log.debug("filter-for [{}]", path);
         int requestPort = request.getBaseUri().getPort();
 
         // Проверяем, относится ли запрос к специальному контроллеру

@@ -80,6 +80,8 @@ public class PublicController {
          * Jackson: Классы из пакетов org.codehaus.jackson.jaxrs или com.fasterxml.jackson.jaxrs.json
          * Jettison: Классы из пакета com.sun.jersey.json.impl
          * MOXy: Классы из пакета org.eclipse.persistence.jpa.rs.util
+         * ---
+         * Jersey JSON Provider: com.sun.jersey.json.impl.provider.entity.JSONRootElementProvider
          */
         MessageBodyReader<CommonRequestDto> ur = providers.getMessageBodyReader(CommonRequestDto.class,
                 CommonRequestDto.class, new Annotation[0], MediaType.APPLICATION_JSON_TYPE);

@@ -8,6 +8,7 @@
 - SpringBoot не используется, Spring MVC не используется
 - в `web.xml` параметр `com.sun.jersey.api.json.POJOMappingFeature` выключен (false)
 - сериализация JSON через JAXB
+- `jersey-json` работает в режиме JAXB-Based Mapping
 - используй SpringServlet для автоматической регистрации компонентов и провайдеров.
 - для интеграции Jersey и Spring используется
   `com.sun.jersey.spi.spring.container.servlet.SpringServlet`.

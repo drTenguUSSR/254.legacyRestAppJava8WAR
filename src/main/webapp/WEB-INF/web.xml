@@ -43,10 +43,6 @@
             <param-value>mil.teng254.legacy</param-value>
         </init-param>
         <init-param>
-            <param-name>com.sun.jersey.spi.container.ContainerRequestFilters</param-name>
-            <param-value>mil.teng254.legacy.filter.SpecialPortFilter</param-value>
-        </init-param>
-        <init-param>
             <param-name>com.sun.jersey.api.json.POJOMappingFeature</param-name>
             <param-value>false</param-value>
         </init-param>
