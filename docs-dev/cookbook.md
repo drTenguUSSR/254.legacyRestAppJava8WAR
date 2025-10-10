@@ -69,14 +69,14 @@ A:
 
 Основные ситуации, требующие JAXBElement:
 1. Сложная схема XML: Элемент в схеме одновременно обладает свойствами
-   nillable="true" и minOccurs="0". JAXBElement позволяет четко различать случай,
-   когда элемент отсутствует (значение null), и случай, когда элемент присутствует с атрибутом xsi:nil="true".
+   `nillable="true"` и `minOccurs="0"`. JAXBElement позволяет четко различать случай,
+   когда элемент отсутствует (значение null), и случай, когда элемент присутствует с атрибутом `xsi:nil="true"`.
 
 2. Несколько элементов с одним типом: Когда в схеме существует несколько
-   глобальных XML-элементов, соответствующих одному Java-типу. JAXBElement
+   глобальных XML-элементов, соответствующих одному Java-типу. `JAXBElement`
    сохраняет информацию о том, какой именно элемент был прочитан из XML.
 
-3. Отсутствие аннотации ```@XmlRootElement```: Если класс не помечен этой аннотацией
+3. Отсутствие аннотации `@XmlRootElement`: Если класс не помечен этой аннотацией
    (например, когда классы генерируются из XSD-схемы), то при маршалинге (преобразовании
    объекта в XML/JSON) может потребоваться JAXBElement, чтобы явно задать
    имя корневого элемента
@@ -91,6 +91,13 @@ gradlew wrapper --gradle-version 6.8.2
 
 - новый файл go-start.cmd
 ````bat
+set MAIN_PORT=8081
+set SPECIAL_PORT=8082
+echo ports main:%MAIN_PORT% spec:%SPECIAL_PORT%
+set JAVA_OPTS=-Dorg.apache.tomcat.util.digester.PROPERTY_SOURCE=org.apache.tomcat.util.digester.EnvironmentPropertySource
+del logs\*.log
+del logs\*.txt
+call x-set-1.8.cmd
 set JAVA_OPTS=%JAVA_OPTS% -Xms1024m -Xmx2096m -Dfile.encoding=utf-8
 set JAVA_OPTS=%JAVA_OPTS% -XX:+UnlockCommercialFeatures -XX:+FlightRecorder
 @rem  -Xdebug
@@ -126,7 +133,7 @@ conf/server.xml
 - ошибка - ```Caused by: java.lang.ClassNotFoundException: javax.xml.bind.JAXBContext```
 для запуска на версиях Java 9+ требуется правка gradle.build
 
-````groovy
+```groovy
 dependencies {
     // Другие зависимости...
     
@@ -139,7 +146,7 @@ dependencies {
     // Активация (требуется для JAXB в версиях до 2.3.0)
     implementation 'javax.activation:activation:1.1.1'
 }
-````
+```
 
 ## Запуск отладки в Intellij Idea
 
