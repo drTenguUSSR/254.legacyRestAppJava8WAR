@@ -76,6 +76,12 @@ public class MicroLanguageTests {
         message += ",\u26A0"; // U+26A0, Warning Sign, ⚠
         message += ",\uD83D\uDD17"; // U+1F517, LINK SYMBOL, '🔗'
         message += ",\u2693"; // U+2693, ANCHOR, '⚓'
+        message += ",\u221E\uDC77"; // U+221E, Infinity, '∞'
+        message += ",\uD83D\uDC77"; // U+1F477, Construction Worker, '👷'
+        message += ",\uD83C\uDFAF"; // U+1F3AF, Direct Hit, '🎯'
+        https://www.compart.com/en/unicode/block/U+1F900
+        message += ",\uD83E\uDD14"; // U+1F914, Thinking Face, '🤔'
+        message += ",\uD83E\uDDFE"; // U+1F9FE, Receipt, '🧾'
         log.debug("spec-symbols-3:{}", message);
     }
 
