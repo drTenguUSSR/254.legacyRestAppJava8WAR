@@ -2,6 +2,7 @@
 package mil.teng254.legacy.test.util;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.catalina.Context;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.connector.Connector;
 import org.apache.catalina.startup.Tomcat;
@@ -25,6 +26,7 @@ public class EmbeddedTomcatServer {
     private final int specialPort;
     private final String tempBaseDir;
     private boolean started = false;
+    private Path webappDir;
 
     public EmbeddedTomcatServer() {
         String mainPortStr = System.getenv("MAIN_PORT");
@@ -53,21 +55,22 @@ public class EmbeddedTomcatServer {
 
         tomcat = new Tomcat();
         tomcat.setBaseDir(tempBaseDir);
-        tomcat.setPort(mainPort); // Основной порт
 
-        // Настраиваем основной коннектор
+        // Основной коннектор
+        tomcat.setPort(mainPort);
         Connector mainConnector = tomcat.getConnector();
-        mainConnector.setPort(mainPort);
         mainConnector.setProperty("address", "0.0.0.0");
 
-        // Добавляем второй коннектор для специального порта
+        // Дополнительный коннектор для специального порта
         Connector specialConnector = new Connector("HTTP/1.1");
         specialConnector.setPort(specialPort);
         specialConnector.setProperty("address", "0.0.0.0");
         specialConnector.setProperty("connectionTimeout", "20000");
-
-        // Добавляем оба коннектора к сервису
         tomcat.getService().addConnector(specialConnector);
+
+        // Явно добавляем контекст с правильными настройками
+        Context context = tomcat.addWebapp("", webappDir.toFile().getAbsolutePath());
+        context.setReloadable(false);
 
         // Запускаем Tomcat
         tomcat.start();
@@ -133,7 +136,7 @@ public class EmbeddedTomcatServer {
 
     private void createAndDeployWebapp() throws IOException {
         // Создаем структуру веб-приложения
-        Path webappDir = Paths.get(tempBaseDir, "webapps/ROOT");
+        webappDir = Paths.get(tempBaseDir, "webapps/ROOT");
         Files.createDirectories(webappDir);
 
         // Создаем WEB-INF и поддиректории
@@ -145,13 +148,7 @@ public class EmbeddedTomcatServer {
         // Создаем web.xml из ресурсного файла
         createWebXml(webInfDir);
 
-        // Используем addWebapp для развертывания приложения:cite[1]
-        // Это заменит использование setConfigFile
-        if (tomcat != null) {
-            tomcat.addWebapp("", webappDir.toAbsolutePath().toString());
-        }
-
-        log.info("Web application deployed to: {}", webappDir);
+        log.info("Web application structure created at: {}", webappDir);
     }
 
     private void createWebXml(Path webInfDir) throws IOException {
@@ -166,7 +163,7 @@ public class EmbeddedTomcatServer {
     }
 
     private String loadWebXmlFromResources() throws IOException {
-        // Загружаем web.xml из ресурсов:cite[8]
+        // Загружаем web.xml из ресурсов
         try (InputStream is = getClass().getClassLoader().getResourceAsStream("tomcat-config/web.xml")) {
             if (is == null) {
                 throw new IOException("web.xml not found in resources/tomcat-config/");

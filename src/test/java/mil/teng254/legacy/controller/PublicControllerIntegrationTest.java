@@ -248,5 +248,27 @@ public class PublicControllerIntegrationTest {
         Assert.assertNotNull(resource);
     }
 
-    // ... остальные методы диагностики
+    @Test
+    public void testCurrentTimeEndpointReturnsValidHtml() {
+        // Создание запроса к эндпоинту времени
+        WebResource webResource = resource().path("dtm-now");
+
+        // Выполнение GET запроса
+        String htmlResponse = webResource
+                .accept(MediaType.TEXT_HTML)
+                .get(String.class);
+
+        // Проверка, что ответ является HTML и содержит ожидаемые элементы
+        Assert.assertNotNull("HTML response should not be null", htmlResponse);
+        Assert.assertTrue("Response should contain HTML title", htmlResponse.contains("<title>Current Time</title>"));
+        Assert.assertTrue("Response should contain the header", htmlResponse.contains("Текущая дата и время (UTC)"));
+
+        // Проверка формата даты (примерная проверка на соответствие шаблону ГГГГ-ММ-ДД)
+        // Это проверяет, что Thymeleaf обработал выражение с датой
+        String regExp = ".*via=\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3,9}Z.*";
+        Pattern pattern = Pattern.compile(regExp);
+        Matcher matcher = pattern.matcher(htmlResponse);
+        Assert.assertTrue("Response should contain a date string."
+                + "pat=[" + regExp + "] text=[\n" + htmlResponse + "\n]", matcher.find());
+    }
 }
