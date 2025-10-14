@@ -52,12 +52,19 @@ dependencies {
     // Testing
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.springframework:spring-test:5.2.8.RELEASE'
-    //testImplementation 'com.sun.jersey:jersey-test-framework-grizzly2:1.19.4'
     testImplementation 'com.sun.jersey.jersey-test-framework:jersey-test-framework-grizzly:1.19.4'
     testImplementation 'com.sun.jersey:jersey-client:1.19.4'
     testImplementation 'javax.xml.bind:jaxb-api:2.3.1'
     testCompileOnly 'org.projectlombok:lombok:1.18.20'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.20'
+    testImplementation 'commons-io:commons-io:2.11.0'
+
+    // Встроенный Tomcat для тестов
+    testImplementation 'org.apache.tomcat.embed:tomcat-embed-core:8.5.69'
+    testImplementation 'org.apache.tomcat.embed:tomcat-embed-jasper:8.5.69'
+    testImplementation 'org.apache.tomcat.embed:tomcat-embed-logging-juli:8.5.2'
+    // Для работы с JSP и EL, если нужно
+    //testImplementation 'org.apache.tomcat.embed:tomcat-embed-websocket:8.5.69'
 
     // Servlet API
     providedCompile 'javax.servlet:javax.servlet-api:3.1.0'
