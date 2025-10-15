@@ -1,3 +1,4 @@
+// src/main/java/mil/teng254/legacy/filter/JAXBContentResolver.java
 package mil.teng254.legacy.filter;
 
 import com.sun.jersey.core.spi.scanning.PackageNamesScanner;
@@ -40,11 +41,12 @@ public class JAXBContentResolver implements ContextResolver<JAXBContext> {
         Class<?>[] allClassesArray = allClasses.toArray(new Class<?>[allClasses.size()]);
         context = JAXBContext.newInstance(allClassesArray);
         String contextName = context.getClass().getName();
+        log.debug(".ctor JAXBContext-implementation={}",contextName);
 
         if (CORRECT_CLASS_NAME.equals(contextName)) {
-            log.debug(".ctor JAXBContext-implementation correct: {}", contextName);
+            log.debug(".ctor JAXBContext correct");
         } else {
-            log.debug(".ctor JAXBContext-implementation ERROR: {}, expected {}", contextName,CORRECT_CLASS_NAME);
+            log.error(".ctor JAXBContext ERROR: {}, expected {}", contextName,CORRECT_CLASS_NAME);
         }
     }
 

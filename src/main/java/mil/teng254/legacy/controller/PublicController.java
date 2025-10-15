@@ -97,7 +97,7 @@ public class PublicController {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getTechJaxbXml() throws JAXBException {
         JAXBContext context = JAXBContext.newInstance(CommonRequestDto.class);
-        String info = "JAXBContext class=[" + context.getClass().getName() + "]";
+        String info = "JAXBContext.class=[" + context.getClass().getName() + "]";
         CommonResponseDto resp = new CommonResponseDto();
         resp.setReport(info);
         log.debug("getTechJaxbXml:{}", resp);

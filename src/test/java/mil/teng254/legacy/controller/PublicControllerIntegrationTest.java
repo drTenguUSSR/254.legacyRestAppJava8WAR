@@ -163,8 +163,8 @@ public class PublicControllerIntegrationTest {
 
         //проверка Dto
         PublicDtos.ResponseCommon data = response.getEntity(PublicDtos.ResponseCommon.class);
-        log.debug("data={}", data.getReport());
-        Assert.assertNotNull(data.getReport());
+        log.debug("data:{}", data.getReport());
+        Assert.assertEquals("JAXBContext.class=[com.sun.xml.bind.v2.runtime.JAXBContextImpl]",data.getReport());
     }
 
     @Test
