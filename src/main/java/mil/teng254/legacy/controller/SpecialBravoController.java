@@ -2,7 +2,7 @@ package mil.teng254.legacy.controller;
 
 import mil.teng254.legacy.dto.CommonRequestDto;
 import mil.teng254.legacy.dto.CommonResponseDto;
-import mil.teng254.legacy.filter.SpecialPort;
+import mil.teng254.legacy.filter.SpecialBravoPort;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.Consumes;
@@ -16,13 +16,13 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
-@Path("/special")
+@Path("/special-bravo")
 @Component
-@SpecialPort
-public class SpecialController {
+@SpecialBravoPort
+public class SpecialBravoController {
 
     @POST
-    @Path("/mark-path")
+    @Path("/mark")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response markPath(JAXBElement<CommonRequestDto> wrequest) {

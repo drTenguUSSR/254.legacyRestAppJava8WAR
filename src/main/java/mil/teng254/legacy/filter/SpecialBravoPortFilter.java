@@ -3,6 +3,7 @@ package mil.teng254.legacy.filter;
 import com.sun.jersey.spi.container.ContainerRequest;
 import com.sun.jersey.spi.container.ContainerRequestFilter;
 import lombok.extern.slf4j.Slf4j;
+import mil.teng254.legacy.controller.SpecialBravoController;
 import org.springframework.core.annotation.AnnotationUtils;
 
 import javax.servlet.http.HttpServletRequest;
@@ -16,13 +17,13 @@ import java.util.UUID;
 
 @Provider
 @Slf4j
-public class SpecialPortFilter implements ContainerRequestFilter {
+public class SpecialBravoPortFilter implements ContainerRequestFilter {
     private int specialPort;
     private Map<String, Class<?>> specialControllers = new HashMap<>();
     @Context
     private HttpServletRequest httpServletRequest;
 
-    public SpecialPortFilter() {
+    public SpecialBravoPortFilter() {
         log.debug(".ctor called. this={}", System.identityHashCode(this));
         String portStr = System.getenv("SPECIAL_PORT");
         if (portStr == null) {
@@ -38,7 +39,7 @@ public class SpecialPortFilter implements ContainerRequestFilter {
         }
 
         // Предварительная регистрация путей специальных контроллеров
-        specialControllers.put("special/", mil.teng254.legacy.controller.SpecialController.class);
+        specialControllers.put("special-bravo/", SpecialBravoController.class);
     }
 
     @Override
@@ -62,7 +63,7 @@ public class SpecialPortFilter implements ContainerRequestFilter {
         //TODO: customize error on WebApplicationException
         if (isSpecialController && controllerClass != null) {
             // Проверяем наличие аннотации @SpecialPort на классе контроллера
-            SpecialPort annotation = AnnotationUtils.findAnnotation(controllerClass, SpecialPort.class);
+            SpecialBravoPort annotation = AnnotationUtils.findAnnotation(controllerClass, SpecialBravoPort.class);
             if (annotation != null) {
                 if (httpServletRequest == null) {
                     String uuid = UUID.randomUUID().toString();

@@ -57,7 +57,7 @@
             <param-name>com.sun.jersey.spi.container.ContainerRequestFilters</param-name>
             <param-value>
                 mil.teng254.legacy.filter.RawRequestLoggingFilter,
-                mil.teng254.legacy.filter.SpecialPortFilter
+                mil.teng254.legacy.filter.SpecialBravoPortFilter
             </param-value>
         </init-param>
         <init-param>
