@@ -20,6 +20,9 @@
 - все типы данных, используемые внутри ```javax.ws.rs.core.Response``` возвращаемые контроллерами, аннотированы @XmlRootElement
 - ObjectFactory не применяется;
 - JAXBElement провайдер не применяется (```com.sun.jersey.json.impl.JAXBElementProvider```)
+- используется Spring AOP 
+  - org.aspectj:aspectjweaver:1.8.7. AspectJ (ajc) не применяется
+  - используется aop:aspectj-autoproxy
 
 ## Базовый промпт для доработок
 
@@ -29,9 +32,10 @@
 - контролер обрабатывает запрос ```http://some.host/api/point```
 - контролер возвращает структуру ```{ "key1":"aaa","key2":42}```
 - для удаленного вызова используется WebResource из Jersey 1.x
-- используется тестовый контейнер (Grizzly)
-- используется  Jersey Test Framework
-- используется jersey-test-framework-grizzly:1.19.4
+- для тестов используется Tomcat Embedded
+//- для тестов используется тестовый контейнер (Grizzly)
+//- используется  Jersey Test Framework
+// используется jersey-test-framework-grizzly:1.19.4
 - тестовый класс аннотирован как @RunWith(SpringJUnit4ClassRunner.class)
   @ContextConfiguration(locations = "classpath:test-applicationContext.xml")
   @WebAppConfiguration

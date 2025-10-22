@@ -4,7 +4,10 @@ import com.sun.jersey.spi.container.ContainerRequest;
 import com.sun.jersey.spi.container.ContainerRequestFilter;
 import lombok.extern.slf4j.Slf4j;
 import mil.teng254.legacy.controller.SpecialBravoController;
+import mil.teng254.legacy.services.SpecialPortService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.AnnotationUtils;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.WebApplicationException;
@@ -15,29 +18,20 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-@Provider
+//@Provider
+@Component
 @Slf4j
 public class SpecialBravoPortFilter implements ContainerRequestFilter {
-    private int specialPort;
+    @Autowired
+    SpecialPortService specialPortService;
+
     private Map<String, Class<?>> specialControllers = new HashMap<>();
+
     @Context
     private HttpServletRequest httpServletRequest;
 
     public SpecialBravoPortFilter() {
         log.debug(".ctor called. this={}", System.identityHashCode(this));
-        String portStr = System.getenv("SPECIAL_PORT");
-        if (portStr == null) {
-            throw new RuntimeException("SPECIAL_PORT environment variable is required");
-        }
-        try {
-            specialPort = Integer.parseInt(portStr);
-        } catch (NumberFormatException e) {
-            throw new RuntimeException("Invalid SPECIAL_PORT value: " + portStr, e);
-        }
-        if (specialPort != -1 && (specialPort < 0 || specialPort > 65535)) {
-            throw new RuntimeException("SPECIAL_PORT must be between 0 and 65535, or -1");
-        }
-
         // Предварительная регистрация путей специальных контроллеров
         specialControllers.put("special-bravo/", SpecialBravoController.class);
     }
@@ -45,8 +39,7 @@ public class SpecialBravoPortFilter implements ContainerRequestFilter {
     @Override
     public ContainerRequest filter(ContainerRequest request) {
         String path = request.getPath();
-        log.debug("filter-for [{}]", path);
-        int requestPort = request.getBaseUri().getPort();
+        log.debug("filter-for [{}] specialPortConfig={}", path, System.identityHashCode(specialPortService));
 
         // Проверяем, относится ли запрос к специальному контроллеру
         boolean isSpecialController = false;
@@ -62,7 +55,7 @@ public class SpecialBravoPortFilter implements ContainerRequestFilter {
 
         //TODO: customize error on WebApplicationException
         if (isSpecialController && controllerClass != null) {
-            // Проверяем наличие аннотации @SpecialPort на классе контроллера
+            // Проверяем наличие аннотации @SpecialBravoPort на классе контроллера
             SpecialBravoPort annotation = AnnotationUtils.findAnnotation(controllerClass, SpecialBravoPort.class);
             if (annotation != null) {
                 if (httpServletRequest == null) {
@@ -70,14 +63,7 @@ public class SpecialBravoPortFilter implements ContainerRequestFilter {
                     log.error("special-controller. {}. httpServletRequest is empty", uuid);
                     throw new WebApplicationException(Response.Status.FORBIDDEN);
                 }
-                String remoteIpAddress = httpServletRequest.getRemoteAddr();
-                if (specialPort == -1) {
-                    log.error("special-controller. only-port(-1). from={}", remoteIpAddress);
-                    throw new WebApplicationException(Response.Status.FORBIDDEN);
-                } else if (requestPort != specialPort) {
-                    log.error("special-controller. only-port({}). from={}", specialPort, remoteIpAddress);
-                    throw new WebApplicationException(Response.Status.FORBIDDEN);
-                }
+                specialPortService.validateCall(httpServletRequest);
             }
         }
 

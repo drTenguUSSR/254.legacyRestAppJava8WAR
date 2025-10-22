@@ -1,5 +1,6 @@
 package mil.teng254.legacy.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import mil.teng254.legacy.dto.CommonRequestDto;
 import mil.teng254.legacy.dto.CommonResponseDto;
 import mil.teng254.legacy.filter.SpecialBravoPort;
@@ -19,6 +20,7 @@ import java.time.format.DateTimeFormatter;
 @Path("/special-bravo")
 @Component
 @SpecialBravoPort
+@Slf4j
 public class SpecialBravoController {
 
     @POST
@@ -56,6 +58,7 @@ public class SpecialBravoController {
         // Получаем временную зону сервера
         ZoneId zone = ZoneId.systemDefault();
         response.setTz(zone.getRules().getOffset(newTime.toInstant()).toString());
+        log.debug("result:{}",response);
 
         return Response.ok(response).build();
     }
