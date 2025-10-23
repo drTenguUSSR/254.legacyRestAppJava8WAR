@@ -52,7 +52,7 @@ dependencies {
     // Testing
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.springframework:spring-test:5.2.8.RELEASE'
-    testImplementation 'com.sun.jersey.jersey-test-framework:jersey-test-framework-grizzly:1.19.4'
+    // testImplementation 'com.sun.jersey.jersey-test-framework:jersey-test-framework-grizzly:1.19.4'
     testImplementation 'com.sun.jersey:jersey-client:1.19.4'
     testImplementation 'javax.xml.bind:jaxb-api:2.3.1'
     testCompileOnly 'org.projectlombok:lombok:1.18.20'
@@ -97,6 +97,14 @@ tasks.withType(JavaCompile) {
     options.deprecation = true
     options.warnings = true
     options.compilerArgs << "-Xlint:unchecked"
+}
+
+test {
+    systemProperties = System.properties + [
+        'tomcat.util.scan.StandardJarScanFilter.jarsToSkip'   : '*.jar',
+        'org.apache.catalina.startup.ContextConfig.jarsToSkip': '*.jar',
+        'org.apache.catalina.startup.TldConfig.jarsToSkip'    : '*.jar'
+    ]
 }
 
 war {

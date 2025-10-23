@@ -1,1 +1,0 @@
-gradlew dependencies > full-dependencies.txt

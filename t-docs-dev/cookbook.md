@@ -8,21 +8,25 @@
 - SpringBoot не используется, Spring MVC не используется
 - в `web.xml` параметр `com.sun.jersey.api.json.POJOMappingFeature` выключен (false)
 - сериализация JSON через JAXB
-- `jersey-json` работает в режиме JAXB-Based Mapping
 - используй SpringServlet для автоматической регистрации компонентов и провайдеров.
 - для интеграции Jersey и Spring используется
   `com.sun.jersey.spi.spring.container.servlet.SpringServlet`.
-- параметры контролеров обернуты в JAXBElement
 - контролеры аннотированы `@Consumes(MediaType.APPLICATION_JSON)`
   и `@Produces(MediaType.APPLICATION_JSON)`
 - контролеры возвращают тип `javax.ws.rs.core.Response`;
-- все типы данных, используемые как параметры контроллера аннотированы ```@XmlRootElement```
-- все типы данных, используемые внутри ```javax.ws.rs.core.Response``` возвращаемые контроллерами, аннотированы @XmlRootElement
+- все типы данных, используемые как параметры контроллера аннотированы `@XmlRootElement`
+- все типы данных, используемые внутри `javax.ws.rs.core.Response`
+возвращаемые контроллерами, аннотированы `@XmlRootElement`
 - ObjectFactory не применяется;
-- JAXBElement провайдер не применяется (```com.sun.jersey.json.impl.JAXBElementProvider```)
+- JAXB
+  - `jersey-json` работает в режиме JAXB-Based Mapping
+  - используется ContextResolver<JAXBContext>
+  - JAXBElement провайдер не применяется (`com.sun.jersey.json.impl.JAXBElementProvider`)
+  - параметры контролеров обернуты в JAXBElement
 - используется Spring AOP 
-  - org.aspectj:aspectjweaver:1.8.7. AspectJ (ajc) не применяется
+  - библиотека org.aspectj:aspectjweaver:1.8.7.
   - используется aop:aspectj-autoproxy
+  - AspectJ (ajc) не применяется
 
 ## Базовый промпт для доработок
 
@@ -31,21 +35,19 @@
 - используется Lombok 1.18.20, Google Guava 20.0,  Log4j2 (log4j-api:2.4) + xml конфигурация в log4j2.xml, фасад slf4j
 - контролер обрабатывает запрос ```http://some.host/api/point```
 - контролер возвращает структуру ```{ "key1":"aaa","key2":42}```
-- для удаленного вызова используется WebResource из Jersey 1.x
-- для тестов используется Tomcat Embedded
-//- для тестов используется тестовый контейнер (Grizzly)
-//- используется  Jersey Test Framework
-// используется jersey-test-framework-grizzly:1.19.4
-- тестовый класс аннотирован как @RunWith(SpringJUnit4ClassRunner.class)
-  @ContextConfiguration(locations = "classpath:test-applicationContext.xml")
-  @WebAppConfiguration
-- создать и запустить Jersey сервер программно, используя Spring контекст
+- для интеграционных тестов:
+  - используется Tomcat Embedded - 8.5.69
+  - запуск Tomcat - в @BeforeClass; остановка в @AfterClass
+  - для вызова endpoints - используется WebResource из Jersey 1.x
+  - тестовый класс аннотирован как `@RunWith(SpringJUnit4ClassRunner.class)`
+      `@ContextConfiguration(locations = "classpath:test-applicationContext.xml")`
+      `@WebAppConfiguration`
 - реализация контролеров:
-  - контролеры реализованы на JAX-RS (Jersey).
+  - контролеры реализованы на ```JAX-RS (Jersey)```.
   - обрабатываемы контролерами типы аннотированы как ```@XmlRootElement```
   - контролеры возвращают тип `javax.ws.rs.core.Response`
   - ObjectFactory не применяется;
-  - JAXBElement провайдер не применяется (```com.sun.jersey.json.impl.JAXBElementProvider```)
+  - JAXBElement провайдер не применяется (`com.sun.jersey.json.impl.JAXBElementProvider`)
   - контролеры принимают и возвращают JSON используя 
   - поддержка JSON на jersey-json (JAXB-Based Mapping)
   - Jersey 1.x требует явной регистрации компонентов через параметры конфигурации
