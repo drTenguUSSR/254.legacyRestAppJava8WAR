@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="PublicControllerIntegrationTest.validGetTime" type="GradleRunConfiguration" factoryName="Gradle">
+  <configuration default="false" name="SystemIT" type="GradleRunConfiguration" factoryName="Gradle">
     <ExternalSystemSettings>
       <option name="env">
         <map>
@@ -18,7 +18,7 @@
         <list>
           <option value=":test" />
           <option value="--tests" />
-          <option value="&quot;mil.teng254.legacy.controller.PublicIT.validGetTime&quot;" />
+          <option value="&quot;mil.teng254.legacy.controller.SystemIT&quot;" />
         </list>
       </option>
       <option name="vmOptions" />

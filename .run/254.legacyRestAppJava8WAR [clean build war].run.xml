@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="PublicControllerIntegrationTest" type="GradleRunConfiguration" factoryName="Gradle">
+  <configuration default="false" name="254.legacyRestAppJava8WAR [clean build war]" type="GradleRunConfiguration" factoryName="Gradle">
     <ExternalSystemSettings>
       <option name="env">
         <map>
@@ -16,17 +16,17 @@
       </option>
       <option name="taskNames">
         <list>
-          <option value=":test" />
-          <option value="--tests" />
-          <option value="&quot;mil.teng254.legacy.controller.PublicControllerIntegrationTest&quot;" />
+          <option value="clean" />
+          <option value="build" />
+          <option value="war" />
         </list>
       </option>
       <option name="vmOptions" />
     </ExternalSystemSettings>
-    <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+    <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
     <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
     <DebugAllEnabled>false</DebugAllEnabled>
-    <RunAsTest>true</RunAsTest>
+    <RunAsTest>false</RunAsTest>
     <method v="2" />
   </configuration>
 </component>

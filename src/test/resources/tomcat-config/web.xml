@@ -5,49 +5,21 @@
                              http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
     <display-name>Legacy Test Application</display-name>
 
-    <!-- Spring Context Configuration -->
     <context-param>
         <param-name>contextConfigLocation</param-name>
-        <param-value>classpath:test-applicationContext.xml</param-value>
+        <param-value>/WEB-INF/applicationContext.xml</param-value>
     </context-param>
 
-    <!-- Spring Context Listener -->
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
-
-    <!-- Request Context Listener -->
     <listener>
         <listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
     </listener>
 
-    <!-- Jersey Servlet -->
-    <servlet>
-        <servlet-name>JerseyServlet</servlet-name>
-        <servlet-class>com.sun.jersey.spi.spring.container.servlet.SpringServlet</servlet-class>
-        <init-param>
-            <param-name>com.sun.jersey.config.property.packages</param-name>
-            <param-value>mil.teng254.legacy.controller,mil.teng254.legacy.filter</param-value>
-        </init-param>
-        <init-param>
-            <param-name>com.sun.jersey.api.json.POJOMappingFeature</param-name>
-            <param-value>false</param-value>
-        </init-param>
-        <init-param>
-            <param-name>com.sun.jersey.config.feature.DisableWADL</param-name>
-            <param-value>true</param-value>
-        </init-param>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>JerseyServlet</servlet-name>
-        <url-pattern>/api/*</url-pattern>
-    </servlet-mapping>
-
-    <!-- Character Encoding Filter -->
+    <!-- Фильтр для установки кодировки -->
     <filter>
-        <filter-name>CharacterEncodingFilter</filter-name>
+        <filter-name>characterEncodingFilter</filter-name>
         <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
         <init-param>
             <param-name>encoding</param-name>
@@ -60,26 +32,61 @@
     </filter>
 
     <filter-mapping>
-        <filter-name>CharacterEncodingFilter</filter-name>
+        <filter-name>characterEncodingFilter</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
+
+    <servlet>
+        <servlet-name>jersey-servlet</servlet-name>
+        <servlet-class>com.sun.jersey.spi.spring.container.servlet.SpringServlet</servlet-class>
+        <init-param>
+            <param-name>com.sun.jersey.config.property.packages</param-name>
+            <param-value>
+                mil.teng254.legacy.controller,
+                mil.teng254.legacy.filter
+            </param-value>
+        </init-param>
+        <!-- Регистрация JAX-RS провайдеров (включая JAXBContentResolver).
+        Запасной вариант, если сканирование не сработало запасной вариант -->
+        <!--        <init-param>-->
+        <!--            <param-name>com.sun.jersey.config.property.jaxrs.providers</param-name>-->
+        <!--            <param-value>-->
+        <!--                mil.teng254.legacy.filter.JAXBContentResolver-->
+        <!--            </param-value>-->
+        <!--        </init-param>-->
+        <init-param>
+            <param-name>com.sun.jersey.spi.container.ContainerRequestFilters</param-name>
+            <param-value>
+                mil.teng254.legacy.filter.RawRequestLoggingFilter,
+                mil.teng254.legacy.filter.SpecialBravoPortFilter
+            </param-value>
+        </init-param>
+        <init-param>
+            <param-name>com.sun.jersey.api.json.POJOMappingFeature</param-name>
+            <param-value>false</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>jersey-servlet</servlet-name>
+        <url-pattern>/api/*</url-pattern>
+    </servlet-mapping>
 
     <!-- Custom Filters -->
     <filter>
         <filter-name>OverrideRequestAttributesFilter</filter-name>
         <filter-class>mil.teng254.legacy.filter.test.OverrideRequestAttributesFilter</filter-class>
     </filter>
-
-    <filter>
-        <filter-name>SaveXCustHeadersServletFilter</filter-name>
-        <filter-class>mil.teng254.legacy.filter.SaveXCustHeadersServletFilter</filter-class>
-    </filter>
-
     <filter-mapping>
         <filter-name>OverrideRequestAttributesFilter</filter-name>
         <url-pattern>/api/*</url-pattern>
     </filter-mapping>
 
+    <filter>
+        <filter-name>SaveXCustHeadersServletFilter</filter-name>
+        <filter-class>mil.teng254.legacy.filter.SaveXCustHeadersServletFilter</filter-class>
+    </filter>
     <filter-mapping>
         <filter-name>SaveXCustHeadersServletFilter</filter-name>
         <url-pattern>/api/*</url-pattern>

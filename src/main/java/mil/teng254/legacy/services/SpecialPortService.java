@@ -2,14 +2,14 @@
 package mil.teng254.legacy.services;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 
-@Service
+@Component
 @Slf4j
 public class SpecialPortService {
     private int specialPort;
