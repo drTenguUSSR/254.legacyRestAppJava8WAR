@@ -87,6 +87,24 @@ A:
    объекта в XML/JSON) может потребоваться JAXBElement, чтобы явно задать
    имя корневого элемента
 
+## WADL
+
+Если генерация WADL включена (по умолчанию) - генерируется WADL:
+```cmd
+http://localhost:8080/your-app/application.wadl
+```
+
+для выключения: в `web.xml`
+
+```xml
+    <servlet>
+        <init-param>
+            <param-name>com.sun.jersey.config.feature.DisableWADL</param-name>
+            <param-value>true</param-value>
+        </init-param>
+    </servlet>
+```
+
 ## Переустановка используемой версии gradlew
 
 ````cmd
