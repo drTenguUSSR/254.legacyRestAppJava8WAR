@@ -17,13 +17,13 @@ import java.util.concurrent.ConcurrentHashMap;
 @Slf4j
 public class StaticHolder {
     public static final String HTTP_HEADER_TEST_ID = "X-Cust-Teng-Test-ID";
-    private static final ConcurrentHashMap<String, RequestAttributes> raHolder = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<String, ServletRequestAttributes> raHolder = new ConcurrentHashMap<>();
 
-    public static RequestAttributes get(String key) {
+    public static ServletRequestAttributes get(String key) {
         return raHolder.get(key);
     }
 
-    public static void set(String key, RequestAttributes val) {
+    public static void set(String key, ServletRequestAttributes val) {
         raHolder.put(key, val);
     }
 
@@ -38,10 +38,12 @@ public class StaticHolder {
         }
         ServletRequestAttributes attrs = (ServletRequestAttributes) raHolder.get(testId);
         Assert.notNull(attrs, "not found ra for testId=[" + testId + "]");
-        HttpServletRequest xreq = attrs.getRequest();
-        Enumeration<String> pHttpHeaders = pHttpRequest.getHeaderNames();
-        ServiceRequestUpdater wrkUpdater = SpringContextHolder.getBean("serviceRequestUpdater", ServiceRequestUpdater.class);
-        wrkUpdater.doUpdate(xreq, pHttpRequest);
+        log.debug("overrideRequestAttributes: loaded attrs.id={}",System.identityHashCode(attrs));
+        //HttpServletRequest xreq = attrs.getRequest();
+        //Enumeration<String> pHttpHeaders = pHttpRequest.getHeaderNames();
+        //ServiceRequestUpdater wrkUpdater = SpringContextHolder.getBean("serviceRequestUpdater", ServiceRequestUpdater.class);
+        //wrkUpdater.doUpdate(xreq, pHttpRequest);
+        //RequestContextHolder.setRequestAttributes(attrs);
         RequestContextHolder.setRequestAttributes(attrs);
     }
 
