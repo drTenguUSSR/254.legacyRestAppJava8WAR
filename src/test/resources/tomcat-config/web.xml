@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--src/test/resources/tomcat-config/web.xml-->
 <web-app version="3.0" xmlns="http://java.sun.com/xml/ns/javaee"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
@@ -13,6 +12,9 @@
 
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+    <listener>
+        <listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
     </listener>
 
     <!-- Фильтр для установки кодировки -->
@@ -28,27 +30,10 @@
             <param-value>true</param-value>
         </init-param>
     </filter>
+
     <filter-mapping>
         <filter-name>characterEncodingFilter</filter-name>
         <url-pattern>/*</url-pattern>
-    </filter-mapping>
-
-    <filter>
-        <filter-name>OverrideRequestAttributesFilter</filter-name>
-        <filter-class>mil.teng254.legacy.filter.test.OverrideRequestAttributesFilter</filter-class>
-    </filter>
-    <filter-mapping>
-        <filter-name>OverrideRequestAttributesFilter</filter-name>
-        <url-pattern>/api/*</url-pattern>
-    </filter-mapping>
-
-    <filter>
-        <filter-name>SaveXCustHeadersServletFilter</filter-name>
-        <filter-class>mil.teng254.legacy.filter.SaveXCustHeadersServletFilter</filter-class>
-    </filter>
-    <filter-mapping>
-        <filter-name>SaveXCustHeadersServletFilter</filter-name>
-        <url-pattern>/api/*</url-pattern>
     </filter-mapping>
 
     <servlet>
@@ -88,4 +73,22 @@
         <url-pattern>/api/*</url-pattern>
     </servlet-mapping>
 
+    <!-- Custom Filters -->
+    <filter>
+        <filter-name>OverrideRequestAttributesFilter</filter-name>
+        <filter-class>mil.teng254.legacy.filter.test.OverrideRequestAttributesFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>OverrideRequestAttributesFilter</filter-name>
+        <url-pattern>/api/*</url-pattern>
+    </filter-mapping>
+
+    <filter>
+        <filter-name>SaveXCustHeadersServletFilter</filter-name>
+        <filter-class>mil.teng254.legacy.filter.SaveXCustHeadersServletFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>SaveXCustHeadersServletFilter</filter-name>
+        <url-pattern>/api/*</url-pattern>
+    </filter-mapping>
 </web-app>

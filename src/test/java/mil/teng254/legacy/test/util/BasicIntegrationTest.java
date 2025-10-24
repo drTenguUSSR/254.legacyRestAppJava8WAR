@@ -71,17 +71,21 @@ public class BasicIntegrationTest {
 
     @Before
     public void setUp() {
+        // Создаем мок-объекты HTTP-запроса и ответа
         MockHttpServletRequest request = new MockHttpServletRequest();
         MockHttpServletResponse response = new MockHttpServletResponse();
 
+        // Устанавливаем необходимые атрибуты запроса
         String testId = UUID.randomUUID().toString();
+        log.debug("setUp. testId={}", testId);
         request.setAttribute(TEST_ID_ATT, testId);
 
+        // Привязываем атрибуты запроса к текущему потоку
         ServletRequestAttributes requestAttributes = new ServletRequestAttributes(request, response);
         RequestContextHolder.setRequestAttributes(requestAttributes);
         StaticHolder.set(testId, requestAttributes);
 
-        log.debug("setUp: testId={} attr.id={}",testId,System.identityHashCode(requestAttributes));
+        log.debug("RequestContext установлен для текущего потока");
     }
 
     @After
