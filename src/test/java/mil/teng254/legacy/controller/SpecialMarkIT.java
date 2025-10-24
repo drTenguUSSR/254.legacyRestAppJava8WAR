@@ -10,6 +10,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+import org.slf4j.helpers.MessageFormatter;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.rules.SpringClassRule;
 import org.springframework.test.context.junit4.rules.SpringMethodRule;
@@ -28,41 +29,60 @@ public class SpecialMarkIT extends BasicIntegrationTest {
 
     @ClassRule
     public static final SpringClassRule SPRING_CLASS_RULE = new SpringClassRule();
+    private static final String TEMPLATE_DATA = "{\"key\": {}, \"stamp\":\"2025-06-20T11:24:36Z\"}";
+    private static final String URI_BRAVO = "/special-bravo/mark";
+    private static final String URI_DELTA = "/special-delta/mark";
 
     @Rule
     public final SpringMethodRule springMethodRule = new SpringMethodRule();
 
     private final int index;
+    private final int total;
     private final String srcData;
-    private final String stamp; // второй параметр, если нужен
-    private final int expectedResult;
+    private final String uri;
+    private final ResourcePort type;
+    private final int expectedHttp;
+    private final int expectedKey;
 
-    public SpecialMarkIT(int index, String srcData, String stamp, int expectedResult) {
+    public SpecialMarkIT(int index, int total, String srcData, String uri, ResourcePort type, int expectedHttp, int expectedKey) {
         this.index = index;
+        this.total = total;
         this.srcData = srcData;
-        this.stamp = stamp;
-        this.expectedResult = expectedResult;
+        this.uri = uri;
+        this.type = type;
+        this.expectedHttp = expectedHttp;
+        this.expectedKey = expectedKey;
     }
 
-    //!index!;srcJson;url;type:M(main),S(special);httpCode:200,403;expectedKey
-    @Parameterized.Parameters(name = "Test #{0}: srcData={1}, stamp={2}, expectedResult={3}")
+    @Parameterized.Parameters(name = "{0}/{1}: srcData={2}")
     public static Collection<Object[]> testData() {
         Object[][] rawData = new Object[][]{
-                {"{\"key\": 100, \"stamp\":\"2025-06-20T11:24:36Z\"}", "2025-06-20T11:24:36Z", 101},
-                {"{\"key\": 200, \"stamp\":\"2025-06-21T11:24:36Z\"}", "2025-06-21T11:24:36Z", 201},
-                {"{\"key\": 300, \"stamp\":\"2025-06-22T11:24:36Z\"}", "2025-06-22T11:24:36Z", 301}
+                //srcJson;url;type:M(main),S(special);httpCode:200,403;expectedKey|-1
+                {MessageFormatter.format(TEMPLATE_DATA, 20).getMessage(), URI_BRAVO, ResourcePort.SPECIAL, 200, 21}
+                , {MessageFormatter.format(TEMPLATE_DATA, 23).getMessage(), URI_BRAVO, ResourcePort.MAIN, 403, -1}
+                , {MessageFormatter.format(TEMPLATE_DATA, 110).getMessage(), URI_DELTA, ResourcePort.SPECIAL, 200, 117}
+                , {MessageFormatter.format(TEMPLATE_DATA, 113).getMessage(), URI_DELTA, ResourcePort.MAIN, 403, -1}
         };
-        List<Object[]> data = new ArrayList<>();
+
+        int totalTests = rawData.length;
+        List<Object[]> data = new ArrayList<>(totalTests);
         for (int i = 0; i < rawData.length; i++) {
-            data.add(new Object[]{i, rawData[i][0], rawData[i][1], rawData[i][2]});
+            data.add(new Object[]{i + 1, totalTests, rawData[i][0], rawData[i][1], rawData[i][2], rawData[i][3], rawData[i][4]});
         }
         return data;
     }
 
     @Test
-    public void FunA() {
-        log.debug("work: index: {}, key: {}, val: {}", index, srcData, expectedResult);
-        WebResource webResource = specialResource().path("/special-bravo/mark");
+    public void funA() {
+        log.debug("funA: {}/{}: {}, {}->{}\n{}", index, total, type + "/" + uri, expectedHttp, expectedKey, srcData);
+        WebResource webResource;
+        if (type == ResourcePort.SPECIAL) {
+            webResource = specialResource().path(uri);
+        } else if (type == ResourcePort.MAIN) {
+            webResource = mainResource().path(uri);
+        } else {
+            throw new IllegalArgumentException("Unexpected type=" + type);
+        }
 
         ClientResponse response = webResource
                 .header(StaticHolder.HTTP_HEADER_TEST_ID, getTestId())
@@ -70,31 +90,17 @@ public class SpecialMarkIT extends BasicIntegrationTest {
                 .type(MediaType.APPLICATION_JSON)
                 .post(ClientResponse.class, srcData);
 
-        Assert.assertEquals(200, response.getStatus());
-        PublicDtos.ResponseCommon respData = response.getEntity(PublicDtos.ResponseCommon.class);
-        Assert.assertEquals(Long.valueOf(expectedResult), respData.getRes());
+        int respStatus = response.getStatus();
+        if (respStatus != 200) {
+            String contentType = response.getHeaders().getFirst("Content-Type");
+            log.debug("resp check. respStatus={} contentType={}", respStatus, contentType);
+        }
+        Assert.assertEquals(expectedHttp, respStatus);
+        if (respStatus == 200) {
+            PublicDtos.ResponseCommon respData = response.getEntity(PublicDtos.ResponseCommon.class);
+            Assert.assertEquals(Long.valueOf(expectedKey), respData.getRes());
+        }
     }
 
-    //@Test
-    public void FunB() {
-        log.debug("FunB-BEG");
-        WebResource webResource = mainResource().path("/special-bravo/mark");
-
-        String srcData = "{\"key\": 100, \"stamp\":\"2025-06-20T11:24:36Z\"}";
-        ClientResponse response = webResource
-                .header(StaticHolder.HTTP_HEADER_TEST_ID, getTestId())
-                .accept(MediaType.APPLICATION_JSON)
-                .type(MediaType.APPLICATION_JSON)
-                .post(ClientResponse.class, srcData);
-
-        Assert.assertEquals(403, response.getStatus());
-//        PublicDtos.ResponseCommon respData = response.getEntity(PublicDtos.ResponseCommon.class);
-//        Assert.assertEquals(Long.valueOf(101), respData.getRes());
-        log.debug("FunB-END2");
-    }
-
-//    @Test
-//    public void multi() {
-//
-//    }
+    public enum ResourcePort {MAIN, SPECIAL}
 }
