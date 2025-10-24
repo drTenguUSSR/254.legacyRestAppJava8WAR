@@ -24,12 +24,9 @@ public class SpecialDeltaAspect {
     @Around("@within(mil.teng254.legacy.filter.SpecialDeltaPort)" +
             " || @annotation(mil.teng254.legacy.filter.SpecialDeltaPort)")
     public Object checkPort(ProceedingJoinPoint joinPoint) throws Throwable {
-        log.debug("before-validate");
-
-        HttpServletRequest httpRequest = ((ServletRequestAttributes) RequestContextHolder
-                .currentRequestAttributes())
-                .getRequest();
-
+        ServletRequestAttributes atts = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+        log.debug("before-validate. atts.id={}", System.identityHashCode(atts));
+        HttpServletRequest httpRequest=atts.getRequest();
         specialPortService.validateCall(httpRequest);
         log.debug("after-validate");
         return joinPoint.proceed();

@@ -17,7 +17,7 @@
     <!-- Включение поддержки AOP -->
     <aop:aspectj-autoproxy proxy-target-class="true"/>
 
-    <bean id="serviceRequestUpdater" class="mil.teng254.legacy.services.ServiceRequestUpdaterImpl" />
+    <bean id="serviceRequestUpdater" class="mil.teng254.legacy.services.ServiceRequestUpdater2Empty" />
 
     <bean id="templateResolver" class="org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver">
         <property name="prefix" value="classpath:/templates/" />

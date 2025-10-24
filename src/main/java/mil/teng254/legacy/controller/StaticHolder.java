@@ -45,19 +45,6 @@ public class StaticHolder {
         RequestContextHolder.setRequestAttributes(attrs);
     }
 
-    public static void overrideRequestAttributes(String testId, MultivaluedMap<String, String> pHeaders) {
-        if (Strings.isNullOrEmpty(testId)) {
-            return;
-        }
-        ServletRequestAttributes attrs = (ServletRequestAttributes) raHolder.get(testId);
-        Assert.notNull(attrs, "not found ra for testId=[" + testId + "]");
-        HttpServletRequest xreq = attrs.getRequest();
-        ServiceRequestUpdater wrkUpdater = SpringContextHolder.getBean("serviceRequestUpdater", ServiceRequestUpdater.class);
-        wrkUpdater.doUpdate(xreq, pHeaders);
-        RequestContextHolder.setRequestAttributes(attrs);
-    }
-
-
     public static void dumpRequestInfo(String prefix, HttpServletRequest httpRequest) {
         Enumeration<String> headersEnum = httpRequest.getHeaderNames();
         if (headersEnum == null) {

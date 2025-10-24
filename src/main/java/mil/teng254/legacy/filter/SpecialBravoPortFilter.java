@@ -13,12 +13,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.ext.Provider;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-//@Provider
 @Component
 @Slf4j
 public class SpecialBravoPortFilter implements ContainerRequestFilter {
@@ -40,7 +38,6 @@ public class SpecialBravoPortFilter implements ContainerRequestFilter {
     public ContainerRequest filter(ContainerRequest request) {
         String path = request.getPath();
         log.debug("filter-for [{}] specialPortConfig={}", path, System.identityHashCode(specialPortService));
-
         // Проверяем, относится ли запрос к специальному контроллеру
         boolean isSpecialController = false;
         Class<?> controllerClass = null;
